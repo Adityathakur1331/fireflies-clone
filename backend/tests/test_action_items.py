@@ -1,3 +1,10 @@
+def test_list_action_items_seeded(seeded_client):
+    res = seeded_client.get("/api/meetings/1/action-items")
+    assert res.status_code == 200
+    items = res.json()
+    assert len(items) >= 3
+
+
 def test_action_item_crud(seeded_client):
     meeting_id = 1
     create = seeded_client.post(

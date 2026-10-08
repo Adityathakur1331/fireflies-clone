@@ -43,6 +43,14 @@ CHECKLIST.md      M1–M25 requirement verification
 
 Relationships: all child tables reference `meetings.id` with `ON DELETE CASCADE`.
 
+| Child table | FK | On delete |
+|-------------|-----|-----------|
+| `meeting_participants` | `meeting_id` | CASCADE |
+| `transcript_segments` | `meeting_id` | CASCADE |
+| `meeting_summaries` | `meeting_id` (PK) | CASCADE |
+| `summary_chapters` | `meeting_id` | CASCADE |
+| `action_items` | `meeting_id` | CASCADE |
+
 See migration: [`backend/alembic/versions/001_initial_schema.py`](backend/alembic/versions/001_initial_schema.py).
 
 ## API endpoints
@@ -88,10 +96,18 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 cd frontend
 cp .env.local.example .env.local
 npm install
-npm run dev
+npm run dev -- --port 3000 --hostname 0.0.0.0
 ```
 
-Open **http://localhost:3000**. API base URL defaults to **http://localhost:8000**.
+Open **http://localhost:3000**. API base URL defaults to **http://localhost:8000** (`NEXT_PUBLIC_API_URL`).
+
+### Quick verify (both servers running)
+
+```bash
+curl http://localhost:8000/api/health
+curl http://localhost:8000/api/meetings
+open http://localhost:3000/meetings   # or visit in browser
+```
 
 ## Environment variables
 
@@ -128,23 +144,52 @@ HTTP alternative: `POST http://localhost:8000/api/admin/seed`
 
 ## Testing
 
-**Backend:**
+### Backend (pytest)
 
 ```bash
 cd backend
 source .venv/bin/activate
-PYTHONPATH=. pytest
+pip install -r requirements.txt
+PYTHONPATH=. pytest -v
 ```
 
-Covers health, meeting list filters, meeting CRUD, and action-item CRUD.
+With coverage report:
 
-**Frontend smoke (manual):**
+```bash
+PYTHONPATH=. pytest --cov=app --cov-report=term-missing
+```
+
+**Automated coverage areas:**
+
+| Area | Test module |
+|------|-------------|
+| Health | `tests/test_health.py` |
+| Meetings list / search / participant / date / sort | `tests/test_meetings_list.py` |
+| Meetings CRUD | `tests/test_meetings_crud.py` |
+| Action items list + CRUD | `tests/test_action_items.py` |
+| Transcript + summary payloads | `tests/test_transcript_summary.py` |
+
+### Frontend (build + smoke)
+
+```bash
+cd frontend
+npm install
+npm run lint
+API_URL=http://localhost:8000 npm run test:smoke
+```
+
+`test:smoke` runs `next build` and optionally hits `/api/health` and `/api/meetings` when `API_URL` is set (backend must be running).
+
+### Manual workflow smoke (before submission)
 
 1. Open `/meetings` — six seeded meetings visible.
-2. Search/filter by participant.
+2. Search/filter by participant and date; clear filters.
 3. Open a meeting — play media, click transcript line to seek, active line highlights.
-4. Summary tab — chapters, topics, add/complete/delete action item.
-5. Create / edit / delete a meeting.
+4. Summary tab — chapters, topics, add/edit/complete/delete action item; refresh to confirm persistence.
+5. Create / edit / delete a meeting — confirm success/error toasts.
+6. Narrow viewport (~375px) — mobile Meetings/Settings nav visible.
+
+Requirement traceability: [`CHECKLIST.md`](CHECKLIST.md). Audit notes: [`docs/SUBMISSION_AUDIT.md`](docs/SUBMISSION_AUDIT.md).
 
 ## Deployment
 
