@@ -180,6 +180,8 @@ API_URL=http://localhost:8000 npm run test:smoke
 
 `test:smoke` runs `next build` and optionally hits `/api/health` and `/api/meetings` when `API_URL` is set (backend must be running).
 
+**Note:** Stop `next dev` before running `test:smoke` / `next build`, or restart dev afterward (`rm -rf .next && npm run dev`). A production build while dev is running can leave `/_next/static/*` returning 404 (unstyled page, stuck loading).
+
 ### Manual workflow smoke (before submission)
 
 1. Open `/meetings` — six seeded meetings visible.
