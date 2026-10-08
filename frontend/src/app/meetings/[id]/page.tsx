@@ -20,14 +20,11 @@ import {
 } from "@/lib/api/meetings";
 import { formatDate, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import * as Tabs from "@radix-ui/react-tabs";
-import { cn } from "@/lib/utils";
 
 export default function MeetingDetailPage() {
   const params = useParams();
   const meetingId = Number(params.id);
   const mediaRef = useRef<HTMLMediaElement | null>(null);
-  const [tab, setTab] = useState("transcript");
   const [searchQuery, setSearchQuery] = useState("");
 
   const meetingQuery = useQuery({
@@ -105,10 +102,14 @@ export default function MeetingDetailPage() {
         )}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="space-y-3">
-          <MediaPlayer meeting={meeting} mediaRef={mediaRef} />
-          <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-6">
+        {/* Primary workspace: player + transcript */}
+        <section
+          className="flex min-h-[28rem] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white lg:col-span-3 lg:min-h-[calc(100vh-15rem)]"
+          aria-label="Transcript workspace"
+        >
+          <div className="shrink-0 space-y-2 border-b border-slate-100 bg-gradient-to-b from-violet-50/80 to-white p-3">
+            <MediaPlayer meeting={meeting} mediaRef={mediaRef} />
             <Button
               variant="outline"
               size="sm"
@@ -117,62 +118,52 @@ export default function MeetingDetailPage() {
               {followTranscript ? "Following transcript" : "Follow transcript off"}
             </Button>
           </div>
-        </div>
+          <div className="min-h-0 flex-1">
+            {transcriptQuery.isLoading && (
+              <p className="p-4 text-sm text-slate-500">Loading transcript...</p>
+            )}
+            {transcriptQuery.isError && (
+              <p className="p-4 text-sm text-red-600">Failed to load transcript.</p>
+            )}
+            {transcriptQuery.data && (
+              <TranscriptPanel
+                segments={segments}
+                activeSegmentId={activeSegmentId}
+                onLineClick={seekToSegment}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                followTranscript={followTranscript}
+              />
+            )}
+          </div>
+        </section>
 
-        <div className="min-h-[480px] rounded-lg border border-slate-200 bg-white">
-          <Tabs.Root value={tab} onValueChange={setTab}>
-            <Tabs.List className="flex border-b border-slate-200">
-              {["transcript", "summary"].map((t) => (
-                <Tabs.Trigger
-                  key={t}
-                  value={t}
-                  className={cn(
-                    "flex-1 px-4 py-3 text-sm font-medium capitalize",
-                    tab === t
-                      ? "border-b-2 border-violet-600 text-violet-700"
-                      : "text-slate-500"
-                  )}
-                >
-                  {t}
-                </Tabs.Trigger>
-              ))}
-            </Tabs.List>
-            <Tabs.Content value="transcript" className="h-[420px]">
-              {transcriptQuery.isLoading && (
-                <p className="p-4 text-sm text-slate-500">Loading transcript...</p>
-              )}
-              {transcriptQuery.isError && (
-                <p className="p-4 text-sm text-red-600">Failed to load transcript.</p>
-              )}
-              {transcriptQuery.data && (
-                <TranscriptPanel
-                  segments={segments}
-                  activeSegmentId={activeSegmentId}
-                  onLineClick={seekToSegment}
-                  searchQuery={searchQuery}
-                  onSearchChange={setSearchQuery}
-                  followTranscript={followTranscript}
-                />
-              )}
-            </Tabs.Content>
-            <Tabs.Content value="summary" className="h-[420px]">
-              {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
-                <p className="p-4 text-sm text-slate-500">Loading summary...</p>
-              )}
-              {(summaryQuery.isError || actionItemsQuery.isError) && (
-                <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
-              )}
-              {summaryQuery.data && actionItemsQuery.data && (
-                <SummaryPanel
-                  meetingId={meetingId}
-                  summary={summaryQuery.data}
-                  actionItems={actionItemsQuery.data}
-                  onChapterClick={seekMedia}
-                />
-              )}
-            </Tabs.Content>
-          </Tabs.Root>
-        </div>
+        {/* Summary intelligence panel */}
+        <aside
+          className="flex min-h-[20rem] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white lg:col-span-2 lg:min-h-[calc(100vh-15rem)]"
+          aria-label="Meeting summary"
+        >
+          <header className="shrink-0 border-b border-slate-200 bg-slate-50 px-4 py-3">
+            <h2 className="text-sm font-semibold text-slate-900">Summary &amp; notes</h2>
+            <p className="text-xs text-slate-500">Topics, chapters, and action items</p>
+          </header>
+          <div className="min-h-0 flex-1">
+            {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
+              <p className="p-4 text-sm text-slate-500">Loading summary...</p>
+            )}
+            {(summaryQuery.isError || actionItemsQuery.isError) && (
+              <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
+            )}
+            {summaryQuery.data && actionItemsQuery.data && (
+              <SummaryPanel
+                meetingId={meetingId}
+                summary={summaryQuery.data}
+                actionItems={actionItemsQuery.data}
+                onChapterClick={seekMedia}
+              />
+            )}
+          </div>
+        </aside>
       </div>
     </AppShell>
   );

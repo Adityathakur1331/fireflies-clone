@@ -72,17 +72,23 @@ export function SummaryPanel({
   });
 
   return (
-    <div className="space-y-6 overflow-y-auto p-4">
-      <section>
-        <h3 className="mb-2 text-sm font-semibold text-slate-900">Overview</h3>
+    <div className="h-full space-y-4 overflow-y-auto p-4">
+      <section className="rounded-lg border border-slate-100 bg-slate-50/60 p-3">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-700">
+          Overview
+        </h3>
         <p className="text-sm leading-relaxed text-slate-700">{summary.overview}</p>
         {summary.gist && (
-          <p className="mt-2 text-sm font-medium text-violet-800">{summary.gist}</p>
+          <p className="mt-2 rounded-md border border-violet-100 bg-violet-50/80 px-2 py-1.5 text-sm font-medium text-violet-900">
+            {summary.gist}
+          </p>
         )}
       </section>
 
-      <section>
-        <h3 className="mb-2 text-sm font-semibold text-slate-900">Key topics</h3>
+      <section className="rounded-lg border border-slate-100 p-3">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-700">
+          Key topics
+        </h3>
         <ul className="flex flex-wrap gap-2">
           {summary.key_topics.map((t) => (
             <li
@@ -95,8 +101,10 @@ export function SummaryPanel({
         </ul>
       </section>
 
-      <section>
-        <h3 className="mb-2 text-sm font-semibold text-slate-900">Chapters</h3>
+      <section className="rounded-lg border border-slate-100 p-3">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-700">
+          Chapters
+        </h3>
         <ul className="space-y-2">
           {summary.chapters.map((ch) => (
             <li key={ch.id}>
@@ -115,8 +123,10 @@ export function SummaryPanel({
         </ul>
       </section>
 
-      <section>
-        <h3 className="mb-2 text-sm font-semibold text-slate-900">Action items</h3>
+      <section className="rounded-lg border border-violet-100 bg-violet-50/30 p-3">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-violet-700">
+          Action items
+        </h3>
         <ul className="space-y-2">
           {actionItems.map((item) => (
             <li
