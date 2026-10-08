@@ -23,8 +23,19 @@ function toDatetimeLocalValue(iso: string): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function EditMeetingDialog({ meeting }: { meeting: MeetingDetail }) {
-  const [open, setOpen] = useState(false);
+export function EditMeetingDialog({
+  meeting,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  meeting: MeetingDetail;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
+
   const [title, setTitle] = useState(meeting.title);
   const [participants, setParticipants] = useState(
     meeting.participants.map((p) => p.display_name).join(", ")
@@ -58,14 +69,18 @@ export function EditMeetingDialog({ meeting }: { meeting: MeetingDetail }) {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const showTrigger = controlledOpen === undefined;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm">
-          <Pencil className="h-3.5 w-3.5" aria-hidden />
-          Edit
-        </Button>
-      </DialogTrigger>
+      {showTrigger && (
+        <DialogTrigger asChild>
+          <Button size="sm">
+            <Pencil className="h-3.5 w-3.5" aria-hidden />
+            Edit
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit meeting</DialogTitle>

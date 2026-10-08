@@ -96,22 +96,57 @@ export default function MeetingDetailPage() {
       <div className="px-4 py-4 md:px-5">
         <MeetingHeader meeting={meeting} />
 
-        <div className="flex min-h-[calc(100vh-12rem)] flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-0 lg:border lg:border-[var(--ff-border)] lg:bg-white">
+        <div
+          className="flex min-h-[calc(100vh-12rem)] flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-0 lg:border lg:border-[var(--ff-border)] lg:bg-white"
+        >
+          {/* Intelligence — left on desktop, below transcript on mobile */}
+          <aside
+            className="order-2 flex min-h-[20rem] flex-col overflow-hidden lg:order-1 lg:col-span-2 lg:min-h-0 lg:border-r lg:border-[var(--ff-border)]"
+            aria-label="Meeting intelligence"
+          >
+            <header className="shrink-0 border-b border-[var(--ff-border)] bg-zinc-50/80 px-4 py-3">
+              <h2 className="text-sm font-semibold text-zinc-900">Notepad</h2>
+              <p className="text-xs text-zinc-500">AI summary, notes, and action items</p>
+            </header>
+            <div className="min-h-0 flex-1 bg-white">
+              {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
+                <p className="p-4 text-sm text-zinc-500">Loading summary…</p>
+              )}
+              {(summaryQuery.isError || actionItemsQuery.isError) && (
+                <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
+              )}
+              {summaryQuery.data && actionItemsQuery.data && (
+                <SummaryPanel
+                  meetingId={meetingId}
+                  summary={summaryQuery.data}
+                  actionItems={actionItemsQuery.data}
+                  onChapterClick={seekMedia}
+                />
+              )}
+            </div>
+          </aside>
+
+          {/* Transcript + recording — right on desktop, first on mobile */}
           <section
-            className="flex min-h-[24rem] flex-col overflow-hidden lg:col-span-3 lg:min-h-0 lg:border-r lg:border-[var(--ff-border)]"
+            className="order-1 flex min-h-[24rem] flex-col overflow-hidden lg:order-2 lg:col-span-3 lg:min-h-0"
             aria-label="Transcript workspace"
           >
-            <div className="shrink-0 space-y-2 border-b border-[var(--ff-border)] bg-zinc-50/50 p-3">
+            <div className="shrink-0 border-b border-[var(--ff-border)] bg-zinc-50/50 p-3">
               <MediaPlayer meeting={meeting} mediaRef={mediaRef} />
-              <Button
-                variant={followTranscript ? "default" : "outline"}
-                size="sm"
-                type="button"
-                onClick={() => setFollowTranscript((f) => !f)}
-              >
-                <ListTree className="h-3.5 w-3.5" aria-hidden />
-                {followTranscript ? "Auto-scroll on" : "Auto-scroll off"}
-              </Button>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Button
+                  variant={followTranscript ? "default" : "outline"}
+                  size="sm"
+                  type="button"
+                  onClick={() => setFollowTranscript((f) => !f)}
+                >
+                  <ListTree className="h-3.5 w-3.5" aria-hidden />
+                  {followTranscript ? "Auto-scroll on" : "Auto-scroll off"}
+                </Button>
+                <span className="text-xs text-zinc-500">
+                  Click any line to seek playback
+                </span>
+              </div>
             </div>
             <div className="min-h-[20rem] flex-1 lg:min-h-0">
               {transcriptQuery.isLoading && (
@@ -132,32 +167,6 @@ export default function MeetingDetailPage() {
               )}
             </div>
           </section>
-
-          <aside
-            className="flex min-h-[18rem] flex-col overflow-hidden lg:col-span-2 lg:min-h-0"
-            aria-label="Meeting intelligence"
-          >
-            <header className="shrink-0 border-b border-[var(--ff-border)] bg-white px-4 py-3">
-              <h2 className="text-sm font-semibold text-zinc-900">Intelligence</h2>
-              <p className="text-xs text-zinc-500">Summary, outline, and tasks</p>
-            </header>
-            <div className="min-h-0 flex-1 bg-white">
-              {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
-                <p className="p-4 text-sm text-zinc-500">Loading summary…</p>
-              )}
-              {(summaryQuery.isError || actionItemsQuery.isError) && (
-                <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
-              )}
-              {summaryQuery.data && actionItemsQuery.data && (
-                <SummaryPanel
-                  meetingId={meetingId}
-                  summary={summaryQuery.data}
-                  actionItems={actionItemsQuery.data}
-                  onChapterClick={seekMedia}
-                />
-              )}
-            </div>
-          </aside>
         </div>
       </div>
     </AppShell>

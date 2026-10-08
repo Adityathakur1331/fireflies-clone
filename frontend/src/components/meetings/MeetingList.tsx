@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Clock, MoreHorizontal, Video } from "lucide-react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { toast } from "sonner";
+import { Clock, Mic2, Video } from "lucide-react";
 import type { MeetingListItem } from "@/types/meeting";
+import { MeetingListRowMenu } from "./MeetingListRowMenu";
 import { formatDate, formatDuration } from "@/lib/utils";
 import { speakerColorClass, speakerInitials } from "@/lib/speaker";
 import { cn } from "@/lib/utils";
@@ -34,16 +32,6 @@ export function MeetingList({ meetings }: { meetings: MeetingListItem[] }) {
 }
 
 function MeetingRow({ meeting: m }: { meeting: MeetingListItem }) {
-  const router = useRouter();
-
-  const copyLink = () => {
-    const url = `${window.location.origin}/meetings/${m.id}`;
-    void navigator.clipboard.writeText(url).then(
-      () => toast.success("Link copied"),
-      () => toast.error("Could not copy link")
-    );
-  };
-
   return (
     <li className="group relative">
       <Link
@@ -67,6 +55,11 @@ function MeetingRow({ meeting: m }: { meeting: MeetingListItem }) {
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-3 w-3" aria-hidden />
                 {formatDuration(m.duration_ms)}
+              </span>
+              <span className="text-zinc-300">·</span>
+              <span className="inline-flex items-center gap-0.5 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600">
+                <Mic2 className="h-2.5 w-2.5" aria-hidden />
+                Recording
               </span>
             </p>
           </div>
@@ -98,39 +91,7 @@ function MeetingRow({ meeting: m }: { meeting: MeetingListItem }) {
       </Link>
 
       <div className="absolute right-2 top-2 sm:top-1/2 sm:-translate-y-1/2">
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger
-            className="rounded-md p-1.5 text-zinc-400 opacity-0 transition-opacity hover:bg-white hover:text-zinc-700 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 group-hover:opacity-100 data-[state=open]:opacity-100"
-            aria-label={`Actions for ${m.title}`}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              className="z-50 min-w-[160px] rounded-md border border-[var(--ff-border)] bg-white p-1 shadow-lg"
-              sideOffset={4}
-              align="end"
-            >
-              <DropdownMenu.Item
-                className="cursor-pointer rounded px-3 py-2 text-sm outline-none hover:bg-zinc-50"
-                onSelect={() => router.push(`/meetings/${m.id}`)}
-              >
-                Open meeting
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                className="cursor-pointer rounded px-3 py-2 text-sm outline-none hover:bg-zinc-50"
-                onSelect={copyLink}
-              >
-                Copy link
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+        <MeetingListRowMenu meeting={m} />
       </div>
     </li>
   );
