@@ -1,13 +1,19 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ChevronDown, UserCircle2 } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export function TopNav({ title }: { title?: string }) {
+  const pathname = usePathname();
+
   return (
-    <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6">
-      <div>
-        <h1 className="text-lg font-semibold text-slate-900">{title ?? "Meetings"}</h1>
+    <header className="border-b border-slate-200 bg-white px-4 md:px-6">
+      <div className="flex h-14 items-center justify-between">
+      <div className="min-w-0">
+        <h1 className="truncate text-lg font-semibold text-slate-900">{title ?? "Meetings"}</h1>
         <p className="text-xs text-slate-500">Signed in as Demo User</p>
       </div>
       <DropdownMenu.Root>
@@ -30,6 +36,29 @@ export function TopNav({ title }: { title?: string }) {
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
+      </div>
+      <nav className="flex gap-1 border-t border-slate-100 py-2 md:hidden">
+        <Link
+          href="/meetings"
+          className={cn(
+            "flex-1 rounded-md px-2 py-1.5 text-center text-xs font-medium",
+            pathname.startsWith("/meetings")
+              ? "bg-violet-100 text-violet-800"
+              : "text-slate-600"
+          )}
+        >
+          Meetings
+        </Link>
+        <Link
+          href="/settings"
+          className={cn(
+            "flex-1 rounded-md px-2 py-1.5 text-center text-xs font-medium",
+            pathname === "/settings" ? "bg-violet-100 text-violet-800" : "text-slate-600"
+          )}
+        >
+          Settings
+        </Link>
+      </nav>
     </header>
   );
 }

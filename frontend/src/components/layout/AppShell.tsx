@@ -13,7 +13,7 @@ export function AppShell({
       <AppSidebar />
       <div className="flex flex-1 flex-col">
         <TopNav title={title} />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

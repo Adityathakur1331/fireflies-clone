@@ -13,7 +13,7 @@ const links = [
 export function AppSidebar() {
   const pathname = usePathname();
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-slate-200 bg-slate-950 text-slate-100">
+    <aside className="hidden w-56 shrink-0 flex-col border-r border-slate-200 bg-slate-950 text-slate-100 md:flex">
       <div className="flex items-center gap-2 border-b border-slate-800 px-4 py-5">
         <Mic2 className="h-6 w-6 text-violet-400" />
         <div>

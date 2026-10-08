@@ -27,6 +27,8 @@ export function SummaryPanel({
   onChapterClick?: (startMs: number) => void;
 }) {
   const [newTask, setNewTask] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
   const queryClient = useQueryClient();
 
   const invalidate = () => {
@@ -55,6 +57,18 @@ export function SummaryPanel({
       toast.success("Action item removed");
       invalidate();
     },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const editMutation = useMutation({
+    mutationFn: ({ id, title }: { id: number; title: string }) =>
+      updateActionItem(meetingId, id, { title }),
+    onSuccess: () => {
+      toast.success("Action item updated");
+      setEditingId(null);
+      invalidate();
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (
@@ -121,24 +135,68 @@ export function SummaryPanel({
                 </Checkbox.Indicator>
               </Checkbox.Root>
               <div className="flex-1">
-                <p
-                  className={
-                    item.is_completed ? "text-sm text-slate-400 line-through" : "text-sm"
-                  }
-                >
-                  {item.title}
-                </p>
-                {item.assignee && (
-                  <p className="text-xs text-slate-500">{item.assignee}</p>
+                {editingId === item.id ? (
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      value={editingTitle}
+                      onChange={(e) => setEditingTitle(e.target.value)}
+                      aria-label="Edit action item title"
+                    />
+                    <Button
+                      size="sm"
+                      disabled={!editingTitle.trim() || editMutation.isPending}
+                      onClick={() =>
+                        editMutation.mutate({ id: item.id, title: editingTitle.trim() })
+                      }
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingId(null)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <p
+                      className={
+                        item.is_completed
+                          ? "text-sm text-slate-400 line-through"
+                          : "text-sm"
+                      }
+                    >
+                      {item.title}
+                    </p>
+                    {item.assignee && (
+                      <p className="text-xs text-slate-500">{item.assignee}</p>
+                    )}
+                  </>
                 )}
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => deleteMutation.mutate(item.id)}
-              >
-                Remove
-              </Button>
+              {editingId !== item.id && (
+                <div className="flex shrink-0 flex-col gap-1 sm:flex-row">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setEditingId(item.id);
+                      setEditingTitle(item.title);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => deleteMutation.mutate(item.id)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
             </li>
           ))}
         </ul>

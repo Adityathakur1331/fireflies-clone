@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -10,6 +11,13 @@ export interface FilterState {
   date_to: string;
 }
 
+const emptyFilters: FilterState = {
+  q: "",
+  participant: "",
+  date_from: "",
+  date_to: "",
+};
+
 export function MeetingFilters({
   filters,
   onChange,
@@ -17,7 +25,10 @@ export function MeetingFilters({
   filters: FilterState;
   onChange: (next: FilterState) => void;
 }) {
+  const hasActiveFilters = Object.values(filters).some((v) => v.length > 0);
+
   return (
+    <div className="space-y-3">
     <div className="grid gap-3 md:grid-cols-4">
       <div>
         <Label>Search</Label>
@@ -51,6 +62,12 @@ export function MeetingFilters({
           onChange={(e) => onChange({ ...filters, date_to: e.target.value })}
         />
       </div>
+    </div>
+    {hasActiveFilters && (
+      <Button type="button" variant="outline" size="sm" onClick={() => onChange(emptyFilters)}>
+        Clear filters
+      </Button>
+    )}
     </div>
   );
 }

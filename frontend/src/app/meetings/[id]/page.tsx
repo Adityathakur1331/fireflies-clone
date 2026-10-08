@@ -138,16 +138,30 @@ export default function MeetingDetailPage() {
               ))}
             </Tabs.List>
             <Tabs.Content value="transcript" className="h-[420px]">
-              <TranscriptPanel
-                segments={segments}
-                activeSegmentId={activeSegmentId}
-                onLineClick={seekToSegment}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                followTranscript={followTranscript}
-              />
+              {transcriptQuery.isLoading && (
+                <p className="p-4 text-sm text-slate-500">Loading transcript...</p>
+              )}
+              {transcriptQuery.isError && (
+                <p className="p-4 text-sm text-red-600">Failed to load transcript.</p>
+              )}
+              {transcriptQuery.data && (
+                <TranscriptPanel
+                  segments={segments}
+                  activeSegmentId={activeSegmentId}
+                  onLineClick={seekToSegment}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  followTranscript={followTranscript}
+                />
+              )}
             </Tabs.Content>
             <Tabs.Content value="summary" className="h-[420px]">
+              {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
+                <p className="p-4 text-sm text-slate-500">Loading summary...</p>
+              )}
+              {(summaryQuery.isError || actionItemsQuery.isError) && (
+                <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
+              )}
               {summaryQuery.data && actionItemsQuery.data && (
                 <SummaryPanel
                   meetingId={meetingId}

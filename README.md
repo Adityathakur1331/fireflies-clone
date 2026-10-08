@@ -148,10 +148,35 @@ Covers health, meeting list filters, meeting CRUD, and action-item CRUD.
 
 ## Deployment
 
-- Deploy **backend** (Railway/Render/Fly) with persistent volume for SQLite or re-seed on boot.
-- Deploy **frontend** (Vercel) with `NEXT_PUBLIC_API_URL` pointing to the hosted API.
-- Enable CORS on the API for your frontend origin.
+### Backend (example: Render / Railway)
+
+1. Set root to `backend`, start command:  
+   `alembic upgrade head && PYTHONPATH=. python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+2. Env: `DATABASE_URL` (persistent disk path if available), `CORS_ORIGINS=https://your-frontend.vercel.app`
+3. Note: ephemeral disks lose SQLite on redeploy unless you use a volume or re-seed on boot.
+
+### Frontend (example: Vercel)
+
+1. Root directory: `frontend`
+2. Env: `NEXT_PUBLIC_API_URL=https://your-api.onrender.com`
+3. Build command: `npm run build` — output: Next.js default
+
+### Local production smoke
+
+```bash
+cd frontend && npm run build && npm run start -- -p 3000
+```
+
+## Preparing GitHub for submission
+
+1. Create a **public** repository on GitHub.
+2. Push this project: `git remote add origin <url>` then `git push -u origin main`.
+3. Add a short **repository description** and link to hosted demo in README when ready.
+4. Optional: add screenshots under `docs/screenshots/` and reference them in README.
+5. Verify clone-from-scratch: follow Setup instructions on a clean machine.
 
 ## Screenshots / demo
 
-Add screenshots to `docs/screenshots/` after running locally. Hosted demo URL: _(set when deployed)_.
+Add screenshots to `docs/screenshots/` after running locally. Set your hosted demo URL in README:
+
+`Live demo: https://...`

@@ -54,10 +54,13 @@ export default function MeetingsPage() {
       )}
       {isError && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          Could not load meetings. Ensure the API is running at{" "}
+          {process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}.
+          <br />
           {(error as Error).message}
         </div>
       )}
-      {data && <MeetingTable meetings={data.items} />}
+      {!isLoading && !isError && data && <MeetingTable meetings={data.items} />}
     </AppShell>
   );
 }
