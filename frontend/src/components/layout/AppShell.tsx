@@ -7,23 +7,30 @@ export function AppShell({
   subtitle,
   actions,
   fullWidth,
+  flush,
+  searchPlaceholder,
 }: {
   children: React.ReactNode;
   title?: string;
   subtitle?: string;
   actions?: React.ReactNode;
   fullWidth?: boolean;
+  /** No padding on main — for split layouts */
+  flush?: boolean;
+  searchPlaceholder?: string;
 }) {
   return (
-    <div className="flex min-h-screen bg-[var(--ff-canvas)]">
+    <div className="flex min-h-screen bg-[var(--ff-bg)]">
       <AppSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopNav title={title} subtitle={subtitle} actions={actions} />
+        <TopNav title={title} subtitle={subtitle} actions={actions} searchPlaceholder={searchPlaceholder} />
         <main
           className={
-            fullWidth
-              ? "flex-1 p-0"
-              : "mx-auto w-full max-w-[1400px] flex-1 p-4 md:p-5"
+            flush
+              ? "flex min-h-0 flex-1 flex-col"
+              : fullWidth
+                ? "flex-1 p-0"
+                : "mx-auto w-full max-w-[1280px] flex-1 p-4 md:p-5"
           }
         >
           {children}

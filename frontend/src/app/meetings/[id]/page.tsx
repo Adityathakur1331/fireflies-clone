@@ -83,7 +83,7 @@ export default function MeetingDetailPage() {
 
   return (
     <AppShell title={meeting.title} fullWidth>
-      <div className="border-b border-[var(--ff-border)] bg-white px-4 py-2 md:px-5">
+      <div className="border-b border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)] px-4 py-2 md:px-5">
         <Link
           href="/meetings"
           className="inline-flex items-center gap-1 text-xs font-medium text-zinc-600 hover:text-violet-700"
@@ -97,18 +97,18 @@ export default function MeetingDetailPage() {
         <MeetingHeader meeting={meeting} />
 
         <div
-          className="flex min-h-[calc(100vh-12rem)] flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-0 lg:border lg:border-[var(--ff-border)] lg:bg-white"
+          className="flex min-h-[calc(100vh-12rem)] flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-0 lg:border lg:border-[var(--ff-border)] lg:bg-[var(--ff-surface)]"
         >
           {/* Intelligence — left on desktop, below transcript on mobile */}
           <aside
             className="order-2 flex min-h-[20rem] flex-col overflow-hidden lg:order-1 lg:col-span-2 lg:min-h-0 lg:border-r lg:border-[var(--ff-border)]"
             aria-label="Meeting intelligence"
           >
-            <header className="shrink-0 border-b border-[var(--ff-border)] bg-zinc-50/80 px-4 py-3">
+            <header className="shrink-0 border-b border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] px-4 py-3">
               <h2 className="text-sm font-semibold text-zinc-900">Notepad</h2>
               <p className="text-xs text-zinc-500">AI summary, notes, and action items</p>
             </header>
-            <div className="min-h-0 flex-1 bg-white">
+            <div className="min-h-0 flex-1 bg-[var(--ff-surface)]">
               {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
                 <p className="p-4 text-sm text-zinc-500">Loading summary…</p>
               )}
@@ -131,7 +131,7 @@ export default function MeetingDetailPage() {
             className="order-1 flex min-h-[24rem] flex-col overflow-hidden lg:order-2 lg:col-span-3 lg:min-h-0"
             aria-label="Transcript workspace"
           >
-            <div className="shrink-0 border-b border-[var(--ff-border)] bg-zinc-50/50 p-3">
+            <div className="shrink-0 border-b border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] p-3">
               <MediaPlayer meeting={meeting} mediaRef={mediaRef} />
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <Button

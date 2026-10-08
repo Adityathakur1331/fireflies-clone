@@ -8,9 +8,9 @@ import { fetchAllTasks } from "@/lib/api/workspace";
 import { cn } from "@/lib/utils";
 
 const filters = [
-  { id: "open" as const, label: "Open" },
+  { id: "open" as const, label: "My Tasks" },
+  { id: "all" as const, label: "All Tasks" },
   { id: "done" as const, label: "Completed" },
-  { id: "all" as const, label: "All" },
 ];
 
 export default function TasksPage() {
@@ -22,34 +22,44 @@ export default function TasksPage() {
   });
 
   const openCount = data?.filter((t) => !t.is_completed).length ?? 0;
+  const listFilter = filter === "open" ? "open" : filter === "done" ? "done" : "all";
 
   return (
     <AppShell
       title="Tasks"
-      subtitle={data ? `${openCount} open · ${data.length} total` : "Action items across meetings"}
+      subtitle={data ? `${openCount} open` : undefined}
+      searchPlaceholder="Search by title or keyword"
     >
-      <div className="mb-4 flex gap-1">
+      <div className="mb-4 flex gap-1 rounded-md border border-[var(--ff-border)] p-0.5 w-fit">
         {filters.map((f) => (
           <button
             key={f.id}
             type="button"
             onClick={() => setFilter(f.id)}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+              "rounded px-3 py-1.5 text-sm font-medium",
               filter === f.id
-                ? "bg-violet-100 text-violet-800"
-                : "text-zinc-600 hover:bg-zinc-100"
+                ? "bg-[var(--ff-sidebar-active)] text-[var(--ff-text)]"
+                : "text-[var(--ff-text-secondary)] hover:text-[var(--ff-text)]"
             )}
           >
             {f.label}
           </button>
         ))}
       </div>
-      {isLoading && <p className="text-sm text-zinc-500">Loading tasks…</p>}
+
+      <div className="mb-4 ff-panel flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <p className="text-sm text-[var(--ff-text-secondary)]">
+          Automatically send tasks to work apps —{" "}
+          <span className="text-[var(--ff-accent-muted)]">Connect (demo)</span>
+        </p>
+      </div>
+
+      {isLoading && <p className="text-sm text-[var(--ff-text-muted)]">Loading tasks…</p>}
       {isError && (
-        <p className="text-sm text-red-600">Could not load tasks. Is the API running?</p>
+        <p className="text-sm text-red-400">Could not load tasks. Is the API running?</p>
       )}
-      {data && <TaskBoard tasks={data} filter={filter} />}
+      {data && <TaskBoard tasks={data} filter={listFilter} />}
     </AppShell>
   );
 }

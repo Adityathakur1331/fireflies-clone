@@ -25,33 +25,33 @@ export function MeetingHeader({ meeting }: { meeting: MeetingDetail }) {
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
           <p className="ff-section-label mb-1">Meeting notebook</p>
-          <h1 className="text-lg font-semibold tracking-tight text-zinc-900 md:text-xl">
+          <h1 className="text-lg font-semibold tracking-tight text-[var(--ff-text)] md:text-xl">
             {meeting.title}
           </h1>
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-600">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--ff-text-secondary)]">
             <span>{formatDate(meeting.occurred_at)}</span>
-            <span className="inline-flex items-center gap-1 text-zinc-500">
+            <span className="inline-flex items-center gap-1 text-[var(--ff-text-muted)]">
               <Clock className="h-3.5 w-3.5" aria-hidden />
               {formatDuration(meeting.duration_ms)}
             </span>
             {meeting.media_type && (
-              <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
+              <span className="rounded bg-[var(--ff-surface-elevated)] px-2 py-0.5 text-xs font-medium text-[var(--ff-text-secondary)]">
                 {meeting.media_type === "video" ? "Video" : "Audio"} recording
               </span>
             )}
           </div>
           {meeting.summary_gist && (
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-zinc-600">
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--ff-text-secondary)]">
               {meeting.summary_gist}
             </p>
           )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Users className="h-4 w-4 text-zinc-400" aria-hidden />
+            <Users className="h-4 w-4 text-[var(--ff-text-muted)]" aria-hidden />
             <div className="flex flex-wrap items-center gap-2">
               {meeting.participants.map((p) => (
                 <span
                   key={p.id}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--ff-border)] bg-white px-2 py-0.5 text-xs text-zinc-700"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] px-2 py-0.5 text-xs text-[var(--ff-text-secondary)]"
                 >
                   <span
                     className={cn(
@@ -81,21 +81,21 @@ export function MeetingHeader({ meeting }: { meeting: MeetingDetail }) {
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
               <DropdownMenu.Content
-                className="z-50 min-w-[180px] rounded-md border border-[var(--ff-border)] bg-white p-1 shadow-lg"
+                className="z-50 min-w-[180px] rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] p-1 shadow-xl"
                 sideOffset={4}
                 align="end"
               >
                 <DropdownMenu.Item
-                  className="cursor-default rounded px-3 py-2 text-sm text-zinc-500 outline-none"
+                  className="cursor-default rounded px-3 py-2 text-sm text-[var(--ff-text-muted)] outline-none"
                   onSelect={(e) => e.preventDefault()}
                 >
                   Export — coming soon
                 </DropdownMenu.Item>
-                <DropdownMenu.Separator className="my-1 h-px bg-zinc-100" />
+                <DropdownMenu.Separator className="my-1 h-px bg-[var(--ff-border)]" />
                 <DropdownMenu.Item asChild onSelect={(e) => e.preventDefault()}>
                   <DeleteMeetingDialog
                     meetingId={meeting.id}
-                    triggerClassName="w-full cursor-pointer rounded px-3 py-2 text-left text-sm text-red-600 outline-none hover:bg-red-50"
+                    triggerClassName="w-full cursor-pointer rounded px-3 py-2 text-left text-sm text-red-400 outline-none hover:bg-red-950/40"
                     triggerLabel="Delete meeting"
                   />
                 </DropdownMenu.Item>

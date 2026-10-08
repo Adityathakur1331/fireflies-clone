@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Send, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
+import { AskFredSidebar } from "@/components/askfred/AskFredSidebar";
 import { answerAskFred, getSuggestedQuestions } from "@/lib/askfred";
 import { fetchMeetings } from "@/lib/api/meetings";
 import { fetchAllTasks, fetchWorkspaceStats } from "@/lib/api/workspace";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 export default function AskFredPage() {
   const [query, setQuery] = useState("");
@@ -38,68 +38,57 @@ export default function AskFredPage() {
   };
 
   return (
-    <AppShell title="AskFred" subtitle="Ask questions about your meetings (demo intelligence)">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <section className="ff-panel p-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-violet-100 text-violet-700">
-            <Sparkles className="h-6 w-6" />
-          </div>
-          <h2 className="text-lg font-semibold text-zinc-900">What would you like to know?</h2>
-          <p className="mt-1 text-sm text-zinc-500">
-            Answers use your real meetings, summaries, and action items (deterministic demo — not a
-            live LLM).
-          </p>
-          <form
-            className="mt-4 flex flex-col gap-2 sm:flex-row"
-            onSubmit={(e) => {
-              e.preventDefault();
-              submit(query);
-            }}
-          >
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ask about decisions, tasks, or topics…"
-              className="h-10"
-              aria-label="AskFred question"
-            />
-            <Button type="submit" className="shrink-0">
-              <Send className="h-4 w-4" aria-hidden />
-              Ask
-            </Button>
-          </form>
-        </section>
+    <AppShell title="AskFred" flush searchPlaceholder="Search by title or keyword">
+      <div className="flex min-h-0 flex-1">
+        <AskFredSidebar />
+        <div className="flex flex-1 flex-col items-center overflow-auto px-4 py-8 md:px-8">
+          <div className="w-full max-w-2xl flex-1">
+            <h2 className="text-center text-2xl font-semibold text-[var(--ff-text)] md:text-3xl">
+              Hi Aditya, how can I help today?
+            </h2>
+            <div className="mt-6 rounded-xl border border-[var(--ff-accent)]/40 bg-[var(--ff-surface)] p-3 shadow-[0_0_0_1px_rgba(124,58,237,0.15)]">
+              <textarea
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Ask anything — use your meeting library for context"
+                className="min-h-[80px] w-full resize-none bg-transparent text-sm text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)] focus:outline-none"
+                aria-label="AskFred message"
+              />
+              <div className="mt-2 flex items-center justify-between border-t border-[var(--ff-border-subtle)] pt-2">
+                <span className="text-[11px] text-[var(--ff-text-muted)]">Demo intelligence · seeded data</span>
+                <Button size="sm" onClick={() => submit(query)} disabled={!query.trim()}>
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
 
-        <section>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-            Suggested
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {suggested.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => submit(s)}
-                className="rounded-full border border-[var(--ff-border)] bg-white px-3 py-1.5 text-left text-xs text-zinc-700 hover:border-violet-200 hover:bg-violet-50"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </section>
+            <div className="mt-6 space-y-2">
+              {suggested.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => submit(s)}
+                  className="flex w-full items-center gap-2 rounded-lg border border-[var(--ff-border)] bg-[var(--ff-surface)] px-4 py-3 text-left text-sm text-[var(--ff-text-secondary)] hover:border-[var(--ff-accent)]/30 hover:bg-[var(--ff-sidebar-hover)]"
+                >
+                  <Sparkles className="h-4 w-4 shrink-0 text-[var(--ff-accent-muted)]" />
+                  {s}
+                </button>
+              ))}
+            </div>
 
-        <section className="ff-panel min-h-[160px] p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-violet-700">Fred</p>
-          {answer ? (
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-zinc-800">
-              {answer}
-            </p>
-          ) : (
-            <p className="mt-3 text-sm text-zinc-500">
-              Pick a suggestion or type a question to see a workspace-aware response.
-            </p>
-          )}
-        </section>
+            {answer && (
+              <div className="mt-8 ff-panel p-5">
+                <p className="text-xs font-semibold text-[var(--ff-accent-muted)]">Fred</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-[var(--ff-text-secondary)]">
+                  {answer}
+                </p>
+              </div>
+            )}
+          </div>
+          <p className="mt-8 text-center text-[11px] text-[var(--ff-text-muted)]">
+            Consumes demo AI credits (not a live model).
+          </p>
+        </div>
       </div>
     </AppShell>
   );

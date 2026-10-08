@@ -77,12 +77,12 @@ export function SummaryPanel({
       <section className="border-b border-[var(--ff-border)] px-4 py-4">
         <div className="mb-2 flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-violet-600" aria-hidden />
-          <h3 className="text-sm font-semibold text-zinc-900">AI Summary</h3>
-          <span className="rounded bg-violet-100 px-1.5 py-0.5 text-[10px] font-medium text-violet-800">
+          <h3 className="text-sm font-semibold text-[var(--ff-text)]">AI Summary</h3>
+          <span className="rounded bg-[var(--ff-accent)]/20 px-1.5 py-0.5 text-[10px] font-medium text-[var(--ff-accent-muted)]">
             Seeded
           </span>
         </div>
-        <p className="text-sm leading-relaxed text-zinc-700">
+        <p className="text-sm leading-relaxed text-[var(--ff-text-secondary)]">
           {summary.overview ?? "No overview available."}
         </p>
         {summary.gist && (

@@ -30,16 +30,16 @@ export function MeetingFilters({
 
   return (
     <div className="ff-panel p-3">
-      <div className="mb-2 flex items-center gap-2 text-xs font-medium text-zinc-600">
+      <div className="mb-2 flex items-center gap-2 text-xs font-medium text-[var(--ff-text-secondary)]">
         <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />
         Filter meetings
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Label className="text-xs text-zinc-500">Search</Label>
+          <Label className="text-xs text-[var(--ff-text-muted)]">Search</Label>
           <div className="relative mt-1">
             <Search
-              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400"
+              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--ff-text-muted)]"
               aria-hidden
             />
             <Input
@@ -51,7 +51,7 @@ export function MeetingFilters({
           </div>
         </div>
         <div>
-          <Label className="text-xs text-zinc-500">Participant</Label>
+          <Label className="text-xs text-[var(--ff-text-muted)]">Participant</Label>
           <Input
             className="mt-1 h-8 text-sm"
             placeholder="Name contains…"
@@ -60,7 +60,7 @@ export function MeetingFilters({
           />
         </div>
         <div>
-          <Label className="text-xs text-zinc-500">From</Label>
+          <Label className="text-xs text-[var(--ff-text-muted)]">From</Label>
           <Input
             className="mt-1 h-8 text-sm"
             type="date"
@@ -69,7 +69,7 @@ export function MeetingFilters({
           />
         </div>
         <div>
-          <Label className="text-xs text-zinc-500">To</Label>
+          <Label className="text-xs text-[var(--ff-text-muted)]">To</Label>
           <Input
             className="mt-1 h-8 text-sm"
             type="date"

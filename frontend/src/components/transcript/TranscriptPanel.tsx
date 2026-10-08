@@ -83,7 +83,7 @@ export function TranscriptPanel({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-[var(--ff-border)] bg-zinc-50/80 px-3 py-2.5">
+      <div className="border-b border-[var(--ff-border)] bg-[var(--ff-surface)] px-3 py-2.5">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search
@@ -160,9 +160,9 @@ export function TranscriptPanel({
               className={cn(
                 "mb-1 flex cursor-pointer gap-2.5 rounded-md border px-2 py-2 transition-colors",
                 isActive
-                  ? "border-violet-300 bg-violet-50/90 shadow-sm"
-                  : "border-transparent hover:bg-zinc-50",
-                isMatch && !isActive && "bg-amber-50/60"
+                  ? "border-[var(--ff-accent)]/60 bg-[var(--ff-accent)]/15 shadow-sm ring-1 ring-[var(--ff-accent)]/30"
+                  : "border-transparent hover:bg-[var(--ff-sidebar-hover)]",
+                isMatch && !isActive && "bg-amber-950/30"
               )}
             >
               <span
@@ -175,12 +175,12 @@ export function TranscriptPanel({
               </span>
               <div className="min-w-0 flex-1">
                 <div className="mb-0.5 flex flex-wrap items-baseline gap-2">
-                  <span className="text-[13px] font-semibold text-zinc-800">
+                  <span className="text-[13px] font-semibold text-[var(--ff-text)]">
                     {seg.speaker_label}
                   </span>
                   <button
                     type="button"
-                    className="font-mono text-[11px] text-violet-700 hover:underline"
+                    className="font-mono text-[11px] text-[var(--ff-accent-muted)] hover:underline"
                     onClick={(e) => {
                       e.stopPropagation();
                       onLineClick(seg);
@@ -189,7 +189,7 @@ export function TranscriptPanel({
                     {formatTimestamp(seg.start_ms)}
                   </button>
                 </div>
-                <p className="text-[13px] leading-relaxed text-zinc-700">
+                <p className="text-[13px] leading-relaxed text-[var(--ff-text-secondary)]">
                   {highlightAll(seg.content, q)}
                 </p>
               </div>
@@ -211,7 +211,7 @@ function highlightAll(text: string, query: string) {
   while (idx >= 0) {
     if (idx > start) parts.push(text.slice(start, idx));
     parts.push(
-      <mark key={idx} className="rounded bg-yellow-200/90 px-0.5 text-zinc-900">
+      <mark key={idx} className="rounded bg-amber-400/30 px-0.5 text-[var(--ff-text)]">
         {text.slice(idx, idx + q.length)}
       </mark>
     );

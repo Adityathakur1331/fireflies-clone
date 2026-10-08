@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { FileUp, Plus } from "lucide-react";
+import { ChevronDown, FileUp, Plus, Video } from "lucide-react";
 import { createMeeting } from "@/lib/api/meetings";
 import {
   fileToTranscriptRaw,
@@ -21,7 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function CreateMeetingDialog() {
+export function CreateMeetingDialog({
+  triggerVariant = "default",
+}: {
+  triggerVariant?: "default" | "capture";
+}) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [participants, setParticipants] = useState("");
@@ -84,6 +88,20 @@ export function CreateMeetingDialog() {
     }
   };
 
+  const trigger =
+    triggerVariant === "capture" ? (
+      <Button variant="capture" size="sm" className="h-8 gap-1 px-2.5">
+        <Video className="h-4 w-4" aria-hidden />
+        <span className="hidden sm:inline">Capture</span>
+        <ChevronDown className="h-3.5 w-3.5 opacity-80" aria-hidden />
+      </Button>
+    ) : (
+      <Button size="sm">
+        <Plus className="h-4 w-4" aria-hidden />
+        Upload / create
+      </Button>
+    );
+
   return (
     <Dialog
       open={open}
@@ -92,19 +110,13 @@ export function CreateMeetingDialog() {
         if (!v) resetForm();
       }}
     >
-      <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus className="h-4 w-4" aria-hidden />
-          Upload / create
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Create meeting</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-zinc-500">
-          Add a title and participants, then paste or upload a transcript to populate the
-          notebook.
+        <p className="text-sm text-[var(--ff-text-secondary)]">
+          Add a title and participants, then paste or upload a transcript.
         </p>
         <div className="space-y-4">
           <div>
@@ -147,16 +159,15 @@ export function CreateMeetingDialog() {
                 {parsingFile ? "Parsing…" : "Choose file"}
               </Button>
               {fileName && (
-                <span className="text-xs text-zinc-600">{fileName}</span>
+                <span className="text-xs text-[var(--ff-text-secondary)]">{fileName}</span>
               )}
             </div>
-            <p className="mt-1 text-xs text-zinc-500">Supported: .txt, .vtt, .json</p>
           </div>
           <div>
             <Label htmlFor="transcript">Or paste transcript</Label>
             <textarea
               id="transcript"
-              className="mt-1 min-h-[120px] w-full rounded-md border border-[var(--ff-border)] bg-white p-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+              className="mt-1 min-h-[120px] w-full rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface)] p-2 text-sm text-[var(--ff-text)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--ff-accent)]"
               value={transcriptRaw}
               onChange={(e) => {
                 setTranscriptRaw(e.target.value);
@@ -164,7 +175,6 @@ export function CreateMeetingDialog() {
               }}
               placeholder="[00:00:05] Alex: Hello team..."
             />
-            <p className="mt-1 text-xs text-zinc-500">Format: [HH:MM:SS] Speaker: text</p>
           </div>
           <Button
             className="w-full"

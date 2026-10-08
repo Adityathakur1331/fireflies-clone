@@ -3,29 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --ff-sidebar: #0f0f12;
-  --ff-sidebar-hover: #1a1a22;
-  --ff-sidebar-active: #2a2140;
-  --ff-accent: #7c3aed;
-  --ff-accent-muted: #a78bfa;
-  --ff-surface: #ffffff;
-  --ff-canvas: #f4f4f6;
-  --ff-border: #e4e4e8;
-  --ff-text: #18181b;
+  --ff-bg: #09090b;
+  --ff-canvas: #0c0c0e;
+  --ff-sidebar: #0a0a0c;
+  --ff-sidebar-hover: #18181b;
+  --ff-sidebar-active: #1f1f23;
+  --ff-sidebar-active-border: #3f3f46;
+  --ff-surface: #141416;
+  --ff-surface-elevated: #1a1a1e;
+  --ff-border: #27272a;
+  --ff-border-subtle: #1f1f23;
+  --ff-text: #fafafa;
+  --ff-text-secondary: #a1a1aa;
   --ff-text-muted: #71717a;
+  --ff-accent: #7c3aed;
+  --ff-accent-hover: #6d28d9;
+  --ff-accent-muted: #a78bfa;
+  --ff-success: #22c55e;
+  --ff-success-muted: #14532d;
 }
 
 body {
   min-height: 100vh;
-  background-color: var(--ff-canvas);
+  background-color: var(--ff-bg);
   color: var(--ff-text);
 }
 
 @layer components {
   .ff-panel {
-    @apply rounded-md border border-[var(--ff-border)] bg-white shadow-sm;
+    @apply rounded-lg border border-[var(--ff-border)] bg-[var(--ff-surface)];
+  }
+  .ff-panel-elevated {
+    @apply rounded-lg border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)];
   }
   .ff-section-label {
-    @apply text-[11px] font-semibold uppercase tracking-wide text-violet-700;
+    @apply text-[11px] font-semibold uppercase tracking-wide text-[var(--ff-text-muted)];
+  }
+  .ff-tab {
+    @apply px-3 py-2 text-sm font-medium text-[var(--ff-text-secondary)] transition-colors hover:text-[var(--ff-text)];
+  }
+  .ff-tab-active {
+    @apply text-[var(--ff-text)] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[var(--ff-accent)];
+  }
+  .ff-subnav-item {
+    @apply flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[13px] font-medium text-[var(--ff-text-secondary)] transition-colors hover:bg-[var(--ff-sidebar-hover)] hover:text-[var(--ff-text)];
+  }
+  .ff-subnav-item-active {
+    @apply bg-[var(--ff-sidebar-active)] text-[var(--ff-text)];
+  }
+  .ff-input-surface {
+    @apply border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)];
   }
 }
