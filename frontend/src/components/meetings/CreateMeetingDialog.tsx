@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { FileUp, Plus } from "lucide-react";
 import { createMeeting } from "@/lib/api/meetings";
+import {
+  fileToTranscriptRaw,
+  isAllowedTranscriptFile,
+} from "@/lib/transcriptFile";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,8 +26,19 @@ export function CreateMeetingDialog() {
   const [title, setTitle] = useState("");
   const [participants, setParticipants] = useState("");
   const [transcriptRaw, setTranscriptRaw] = useState("");
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [parsingFile, setParsingFile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const resetForm = () => {
+    setTitle("");
+    setParticipants("");
+    setTranscriptRaw("");
+    setFileName(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -40,23 +56,56 @@ export function CreateMeetingDialog() {
       toast.success("Meeting created");
       queryClient.invalidateQueries({ queryKey: ["meetings"] });
       setOpen(false);
-      setTitle("");
-      setParticipants("");
-      setTranscriptRaw("");
+      resetForm();
       router.push(`/meetings/${meeting.id}`);
     },
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!isAllowedTranscriptFile(file.name)) {
+      toast.error("Use a .txt, .vtt, or .json transcript file.");
+      e.target.value = "";
+      return;
+    }
+    setParsingFile(true);
+    try {
+      const raw = await fileToTranscriptRaw(file);
+      setTranscriptRaw(raw);
+      setFileName(file.name);
+      toast.success("Transcript loaded from file");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not parse file");
+      setFileName(null);
+    } finally {
+      setParsingFile(false);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
+        if (!v) resetForm();
+      }}
+    >
       <DialogTrigger asChild>
-        <Button>New meeting</Button>
+        <Button size="sm">
+          <Plus className="h-4 w-4" aria-hidden />
+          Upload / create
+        </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Create meeting</DialogTitle>
         </DialogHeader>
+        <p className="text-sm text-zinc-500">
+          Add a title and participants, then paste or upload a transcript to populate the
+          notebook.
+        </p>
         <div className="space-y-4">
           <div>
             <Label htmlFor="title">Title</Label>
@@ -77,24 +126,52 @@ export function CreateMeetingDialog() {
             />
           </div>
           <div>
-            <Label htmlFor="transcript">Transcript paste (optional)</Label>
+            <Label>Transcript file (optional)</Label>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".txt,.vtt,.json"
+                className="hidden"
+                onChange={onFileChange}
+                aria-label="Upload transcript file"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={parsingFile}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <FileUp className="h-4 w-4" aria-hidden />
+                {parsingFile ? "Parsing…" : "Choose file"}
+              </Button>
+              {fileName && (
+                <span className="text-xs text-zinc-600">{fileName}</span>
+              )}
+            </div>
+            <p className="mt-1 text-xs text-zinc-500">Supported: .txt, .vtt, .json</p>
+          </div>
+          <div>
+            <Label htmlFor="transcript">Or paste transcript</Label>
             <textarea
               id="transcript"
-              className="mt-1 min-h-[120px] w-full rounded-md border border-slate-200 p-2 text-sm"
+              className="mt-1 min-h-[120px] w-full rounded-md border border-[var(--ff-border)] bg-white p-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
               value={transcriptRaw}
-              onChange={(e) => setTranscriptRaw(e.target.value)}
+              onChange={(e) => {
+                setTranscriptRaw(e.target.value);
+                if (e.target.value) setFileName(null);
+              }}
               placeholder="[00:00:05] Alex: Hello team..."
             />
-            <p className="mt-1 text-xs text-slate-500">
-              Format: [HH:MM:SS] Speaker: text
-            </p>
+            <p className="mt-1 text-xs text-zinc-500">Format: [HH:MM:SS] Speaker: text</p>
           </div>
           <Button
             className="w-full"
-            disabled={!title || mutation.isPending}
+            disabled={!title.trim() || mutation.isPending || parsingFile}
             onClick={() => mutation.mutate()}
           >
-            Create
+            {mutation.isPending ? "Creating…" : "Create meeting"}
           </Button>
         </div>
       </DialogContent>

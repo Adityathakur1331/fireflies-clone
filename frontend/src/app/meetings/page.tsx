@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
 import { CreateMeetingDialog } from "@/components/meetings/CreateMeetingDialog";
 import { MeetingFilters, type FilterState } from "@/components/meetings/MeetingFilters";
-import { MeetingTable } from "@/components/meetings/MeetingTable";
+import { MeetingList } from "@/components/meetings/MeetingList";
 import { useDebounce } from "@/hooks/useDebounce";
 import { fetchMeetings } from "@/lib/api/meetings";
 
@@ -35,32 +35,28 @@ export default function MeetingsPage() {
   });
 
   return (
-    <AppShell title="Meetings library">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-sm text-slate-600">
-            Sorted by recency · {data?.total ?? 0} meetings
-          </p>
-        </div>
-        <CreateMeetingDialog />
-      </div>
+    <AppShell
+      title="Meetings"
+      subtitle={
+        data ? `${data.total} meeting${data.total === 1 ? "" : "s"} · newest first` : undefined
+      }
+      actions={<CreateMeetingDialog />}
+    >
       <div className="mb-4">
         <MeetingFilters filters={filters} onChange={setFilters} />
       </div>
       {isLoading && (
-        <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-slate-500">
-          Loading meetings...
-        </div>
+        <div className="ff-panel p-10 text-center text-sm text-zinc-500">Loading meetings…</div>
       )}
       {isError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">
           Could not load meetings. Ensure the API is running at{" "}
           {process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}.
           <br />
           {(error as Error).message}
         </div>
       )}
-      {!isLoading && !isError && data && <MeetingTable meetings={data.items} />}
+      {!isLoading && !isError && data && <MeetingList meetings={data.items} />}
     </AppShell>
   );
 }

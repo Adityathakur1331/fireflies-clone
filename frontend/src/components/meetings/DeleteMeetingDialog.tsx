@@ -14,7 +14,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function DeleteMeetingDialog({ meetingId }: { meetingId: number }) {
+export function DeleteMeetingDialog({
+  meetingId,
+  triggerClassName,
+  triggerLabel = "Delete",
+}: {
+  meetingId: number;
+  triggerClassName?: string;
+  triggerLabel?: string;
+}) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -30,26 +38,37 @@ export function DeleteMeetingDialog({ meetingId }: { meetingId: number }) {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const trigger = triggerClassName ? (
+    <button type="button" className={triggerClassName}>
+      {triggerLabel}
+    </button>
+  ) : (
+    <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50 hover:text-red-700">
+      {triggerLabel}
+    </Button>
+  );
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="destructive" size="sm">Delete</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete meeting?</DialogTitle>
+          <DialogTitle>Delete this meeting?</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-slate-600">
-          This removes the transcript, summary, and action items permanently.
+        <p className="text-sm text-zinc-600">
+          This permanently removes the recording reference, transcript, AI summary, and action
+          items. This cannot be undone.
         </p>
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setOpen(false)} disabled={mutation.isPending}>
+            Cancel
+          </Button>
           <Button
             variant="destructive"
             disabled={mutation.isPending}
             onClick={() => mutation.mutate()}
           >
-            Delete
+            {mutation.isPending ? "Deleting…" : "Delete meeting"}
           </Button>
         </div>
       </DialogContent>

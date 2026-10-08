@@ -4,10 +4,9 @@ import { useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ListTree } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
-import { DeleteMeetingDialog } from "@/components/meetings/DeleteMeetingDialog";
-import { EditMeetingDialog } from "@/components/meetings/EditMeetingDialog";
+import { MeetingHeader } from "@/components/meetings/MeetingHeader";
 import { MediaPlayer } from "@/components/transcript/MediaPlayer";
 import { TranscriptPanel } from "@/components/transcript/TranscriptPanel";
 import { SummaryPanel } from "@/components/summary/SummaryPanel";
@@ -18,7 +17,6 @@ import {
   fetchSummary,
   fetchTranscript,
 } from "@/lib/api/meetings";
-import { formatDate, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 export default function MeetingDetailPage() {
@@ -66,8 +64,8 @@ export default function MeetingDetailPage() {
 
   if (meetingQuery.isLoading) {
     return (
-      <AppShell title="Meeting">
-        <p className="text-slate-500">Loading...</p>
+      <AppShell title="Meeting" fullWidth>
+        <div className="p-6 text-sm text-zinc-500">Loading meeting…</div>
       </AppShell>
     );
   }
@@ -76,94 +74,91 @@ export default function MeetingDetailPage() {
     return (
       <AppShell title="Meeting">
         <p className="text-red-600">Meeting not found.</p>
-        <Link href="/meetings" className="text-violet-700 underline">Back to library</Link>
+        <Link href="/meetings" className="text-sm text-violet-700 hover:underline">
+          Back to meetings
+        </Link>
       </AppShell>
     );
   }
 
   return (
-    <AppShell title={meeting.title}>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <Link href="/meetings" className="inline-flex items-center gap-1 text-sm text-violet-700">
-          <ArrowLeft className="h-4 w-4" /> Back to library
+    <AppShell title={meeting.title} fullWidth>
+      <div className="border-b border-[var(--ff-border)] bg-white px-4 py-2 md:px-5">
+        <Link
+          href="/meetings"
+          className="inline-flex items-center gap-1 text-xs font-medium text-zinc-600 hover:text-violet-700"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+          All meetings
         </Link>
-        <div className="flex gap-2">
-          <EditMeetingDialog meeting={meeting} />
-          <DeleteMeetingDialog meetingId={meeting.id} />
+      </div>
+
+      <div className="px-4 py-4 md:px-5">
+        <MeetingHeader meeting={meeting} />
+
+        <div className="flex min-h-[calc(100vh-12rem)] flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-0 lg:border lg:border-[var(--ff-border)] lg:bg-white">
+          <section
+            className="flex min-h-[24rem] flex-col overflow-hidden lg:col-span-3 lg:min-h-0 lg:border-r lg:border-[var(--ff-border)]"
+            aria-label="Transcript workspace"
+          >
+            <div className="shrink-0 space-y-2 border-b border-[var(--ff-border)] bg-zinc-50/50 p-3">
+              <MediaPlayer meeting={meeting} mediaRef={mediaRef} />
+              <Button
+                variant={followTranscript ? "default" : "outline"}
+                size="sm"
+                type="button"
+                onClick={() => setFollowTranscript((f) => !f)}
+              >
+                <ListTree className="h-3.5 w-3.5" aria-hidden />
+                {followTranscript ? "Auto-scroll on" : "Auto-scroll off"}
+              </Button>
+            </div>
+            <div className="min-h-[20rem] flex-1 lg:min-h-0">
+              {transcriptQuery.isLoading && (
+                <p className="p-4 text-sm text-zinc-500">Loading transcript…</p>
+              )}
+              {transcriptQuery.isError && (
+                <p className="p-4 text-sm text-red-600">Failed to load transcript.</p>
+              )}
+              {transcriptQuery.data && (
+                <TranscriptPanel
+                  segments={segments}
+                  activeSegmentId={activeSegmentId}
+                  onLineClick={seekToSegment}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  followTranscript={followTranscript}
+                />
+              )}
+            </div>
+          </section>
+
+          <aside
+            className="flex min-h-[18rem] flex-col overflow-hidden lg:col-span-2 lg:min-h-0"
+            aria-label="Meeting intelligence"
+          >
+            <header className="shrink-0 border-b border-[var(--ff-border)] bg-white px-4 py-3">
+              <h2 className="text-sm font-semibold text-zinc-900">Intelligence</h2>
+              <p className="text-xs text-zinc-500">Summary, outline, and tasks</p>
+            </header>
+            <div className="min-h-0 flex-1 bg-white">
+              {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
+                <p className="p-4 text-sm text-zinc-500">Loading summary…</p>
+              )}
+              {(summaryQuery.isError || actionItemsQuery.isError) && (
+                <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
+              )}
+              {summaryQuery.data && actionItemsQuery.data && (
+                <SummaryPanel
+                  meetingId={meetingId}
+                  summary={summaryQuery.data}
+                  actionItems={actionItemsQuery.data}
+                  onChapterClick={seekMedia}
+                />
+              )}
+            </div>
+          </aside>
         </div>
-      </div>
-
-      <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4">
-        <p className="text-sm text-slate-600">
-          {formatDate(meeting.occurred_at)} · {formatDuration(meeting.duration_ms)}
-        </p>
-        {meeting.summary_gist && (
-          <p className="mt-1 text-sm text-slate-800">{meeting.summary_gist}</p>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-6">
-        {/* Primary workspace: player + transcript */}
-        <section
-          className="flex min-h-[28rem] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white lg:col-span-3 lg:min-h-[calc(100vh-15rem)]"
-          aria-label="Transcript workspace"
-        >
-          <div className="shrink-0 space-y-2 border-b border-slate-100 bg-gradient-to-b from-violet-50/80 to-white p-3">
-            <MediaPlayer meeting={meeting} mediaRef={mediaRef} />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setFollowTranscript((f) => !f)}
-            >
-              {followTranscript ? "Following transcript" : "Follow transcript off"}
-            </Button>
-          </div>
-          <div className="min-h-0 flex-1">
-            {transcriptQuery.isLoading && (
-              <p className="p-4 text-sm text-slate-500">Loading transcript...</p>
-            )}
-            {transcriptQuery.isError && (
-              <p className="p-4 text-sm text-red-600">Failed to load transcript.</p>
-            )}
-            {transcriptQuery.data && (
-              <TranscriptPanel
-                segments={segments}
-                activeSegmentId={activeSegmentId}
-                onLineClick={seekToSegment}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                followTranscript={followTranscript}
-              />
-            )}
-          </div>
-        </section>
-
-        {/* Summary intelligence panel */}
-        <aside
-          className="flex min-h-[20rem] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white lg:col-span-2 lg:min-h-[calc(100vh-15rem)]"
-          aria-label="Meeting summary"
-        >
-          <header className="shrink-0 border-b border-slate-200 bg-slate-50 px-4 py-3">
-            <h2 className="text-sm font-semibold text-slate-900">Summary &amp; notes</h2>
-            <p className="text-xs text-slate-500">Topics, chapters, and action items</p>
-          </header>
-          <div className="min-h-0 flex-1">
-            {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
-              <p className="p-4 text-sm text-slate-500">Loading summary...</p>
-            )}
-            {(summaryQuery.isError || actionItemsQuery.isError) && (
-              <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
-            )}
-            {summaryQuery.data && actionItemsQuery.data && (
-              <SummaryPanel
-                meetingId={meetingId}
-                summary={summaryQuery.data}
-                actionItems={actionItemsQuery.data}
-                onChapterClick={seekMedia}
-              />
-            )}
-          </div>
-        </aside>
       </div>
     </AppShell>
   );

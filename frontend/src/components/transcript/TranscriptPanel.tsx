@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
 import type { TranscriptSegment } from "@/types/meeting";
 import { formatTimestamp } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { speakerColorClass, speakerInitials } from "@/lib/speaker";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function TranscriptPanel({
   segments,
@@ -22,6 +25,7 @@ export function TranscriptPanel({
   followTranscript: boolean;
 }) {
   const rowRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const [matchIndex, setMatchIndex] = useState(0);
 
   const sorted = useMemo(
     () => [...segments].sort((a, b) => a.sequence - b.sequence),
@@ -30,29 +34,122 @@ export function TranscriptPanel({
 
   const q = searchQuery.trim().toLowerCase();
 
+  const matchingIds = useMemo(() => {
+    if (!q) return [];
+    return sorted
+      .filter(
+        (seg) =>
+          seg.content.toLowerCase().includes(q) ||
+          seg.speaker_label.toLowerCase().includes(q)
+      )
+      .map((s) => s.id);
+  }, [sorted, q]);
+
+  useEffect(() => {
+    setMatchIndex(0);
+  }, [q]);
+
   useEffect(() => {
     if (!followTranscript || activeSegmentId == null) return;
     const el = rowRefs.current[activeSegmentId];
     el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [activeSegmentId, followTranscript]);
 
+  const scrollToMatch = (index: number) => {
+    const id = matchingIds[index];
+    if (id == null) return;
+    const el = rowRefs.current[id];
+    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    onLineClick(sorted.find((s) => s.id === id)!);
+  };
+
+  const goPrev = () => {
+    if (!matchingIds.length) return;
+    const next = (matchIndex - 1 + matchingIds.length) % matchingIds.length;
+    setMatchIndex(next);
+    scrollToMatch(next);
+  };
+
+  const goNext = () => {
+    if (!matchingIds.length) return;
+    const next = (matchIndex + 1) % matchingIds.length;
+    setMatchIndex(next);
+    scrollToMatch(next);
+  };
+
+  const visibleSegments = q
+    ? sorted.filter((seg) => matchingIds.includes(seg.id))
+    : sorted;
+
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-slate-200 p-3">
-        <Input
-          placeholder="Search in transcript..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-        />
+      <div className="border-b border-[var(--ff-border)] bg-zinc-50/80 px-3 py-2.5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search
+              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400"
+              aria-hidden
+            />
+            <Input
+              className="h-8 pl-8 pr-8 text-sm"
+              placeholder="Search transcript..."
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              aria-label="Search transcript"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-zinc-400 hover:text-zinc-700"
+                aria-label="Clear search"
+                onClick={() => onSearchChange("")}
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+          {q && (
+            <div className="flex items-center gap-1 text-xs text-zinc-600">
+              <span className="whitespace-nowrap tabular-nums">
+                {matchingIds.length
+                  ? `${matchIndex + 1} / ${matchingIds.length}`
+                  : "0 results"}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                disabled={!matchingIds.length}
+                onClick={goPrev}
+                aria-label="Previous match"
+              >
+                <ChevronUp className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                disabled={!matchingIds.length}
+                onClick={goNext}
+                aria-label="Next match"
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-2">
-        {sorted.map((seg) => {
-          const matches =
-            q.length > 0 &&
-            (seg.content.toLowerCase().includes(q) ||
-              seg.speaker_label.toLowerCase().includes(q));
-          if (q && !matches) return null;
+      <div className="flex-1 overflow-y-auto px-2 py-2">
+        {q && !matchingIds.length && (
+          <p className="px-2 py-8 text-center text-sm text-zinc-500">
+            No matches for &ldquo;{searchQuery.trim()}&rdquo;
+          </p>
+        )}
+        {visibleSegments.map((seg) => {
           const isActive = seg.id === activeSegmentId;
+          const isMatch = q.length > 0;
           return (
             <div
               key={seg.id}
@@ -61,20 +158,41 @@ export function TranscriptPanel({
               }}
               onClick={() => onLineClick(seg)}
               className={cn(
-                "mb-2 cursor-pointer rounded-md border px-3 py-2 transition-colors",
+                "mb-1 flex cursor-pointer gap-2.5 rounded-md border px-2 py-2 transition-colors",
                 isActive
-                  ? "border-violet-400 bg-violet-50 ring-1 ring-violet-300"
-                  : "border-transparent hover:bg-slate-50",
-                matches && !isActive && "bg-amber-50"
+                  ? "border-violet-300 bg-violet-50/90 shadow-sm"
+                  : "border-transparent hover:bg-zinc-50",
+                isMatch && !isActive && "bg-amber-50/60"
               )}
             >
-              <div className="mb-1 flex items-center gap-2 text-xs text-slate-500">
-                <span className="font-mono">{formatTimestamp(seg.start_ms)}</span>
-                <span className="font-semibold text-violet-700">{seg.speaker_label}</span>
+              <span
+                className={cn(
+                  "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold",
+                  speakerColorClass(seg.speaker_label)
+                )}
+              >
+                {speakerInitials(seg.speaker_label)}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="mb-0.5 flex flex-wrap items-baseline gap-2">
+                  <span className="text-[13px] font-semibold text-zinc-800">
+                    {seg.speaker_label}
+                  </span>
+                  <button
+                    type="button"
+                    className="font-mono text-[11px] text-violet-700 hover:underline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLineClick(seg);
+                    }}
+                  >
+                    {formatTimestamp(seg.start_ms)}
+                  </button>
+                </div>
+                <p className="text-[13px] leading-relaxed text-zinc-700">
+                  {highlightAll(seg.content, q)}
+                </p>
               </div>
-              <p className="text-sm text-slate-800">
-                {highlightText(seg.content, q)}
-              </p>
             </div>
           );
         })}
@@ -83,15 +201,23 @@ export function TranscriptPanel({
   );
 }
 
-function highlightText(text: string, query: string) {
+function highlightAll(text: string, query: string) {
   if (!query) return text;
-  const idx = text.toLowerCase().indexOf(query);
-  if (idx < 0) return text;
-  return (
-    <>
-      {text.slice(0, idx)}
-      <mark className="rounded bg-yellow-200 px-0.5">{text.slice(idx, idx + query.length)}</mark>
-      {text.slice(idx + query.length)}
-    </>
-  );
+  const lower = text.toLowerCase();
+  const q = query.toLowerCase();
+  const parts: ReactNode[] = [];
+  let start = 0;
+  let idx = lower.indexOf(q, start);
+  while (idx >= 0) {
+    if (idx > start) parts.push(text.slice(start, idx));
+    parts.push(
+      <mark key={idx} className="rounded bg-yellow-200/90 px-0.5 text-zinc-900">
+        {text.slice(idx, idx + q.length)}
+      </mark>
+    );
+    start = idx + q.length;
+    idx = lower.indexOf(q, start);
+  }
+  if (start < text.length) parts.push(text.slice(start));
+  return parts.length ? parts : text;
 }

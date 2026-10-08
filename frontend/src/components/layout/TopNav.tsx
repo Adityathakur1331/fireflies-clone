@@ -2,60 +2,80 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, UserCircle2 } from "lucide-react";
+import { ChevronDown, LayoutGrid, Settings } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
 
-export function TopNav({ title }: { title?: string }) {
+export function TopNav({
+  title,
+  subtitle,
+  actions,
+}: {
+  title?: string;
+  subtitle?: string;
+  actions?: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   return (
-    <header className="border-b border-slate-200 bg-white px-4 md:px-6">
-      <div className="flex h-14 items-center justify-between">
-      <div className="min-w-0">
-        <h1 className="truncate text-lg font-semibold text-slate-900">{title ?? "Meetings"}</h1>
-        <p className="text-xs text-slate-500">Signed in as Demo User</p>
-      </div>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50">
-          <UserCircle2 className="h-5 w-5 text-slate-500" />
-          <span>Demo User</span>
-          <ChevronDown className="h-4 w-4 text-slate-400" />
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            className="z-50 min-w-[180px] rounded-md border border-slate-200 bg-white p-1 shadow-md"
-            sideOffset={6}
+    <header className="sticky top-0 z-20 border-b border-[var(--ff-border)] bg-white/95 backdrop-blur-sm">
+      <div className="flex h-12 items-center justify-between gap-3 px-4 md:px-5">
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-[15px] font-semibold text-zinc-900">
+            {title ?? "Meetings"}
+          </h1>
+          {subtitle && (
+            <p className="truncate text-xs text-zinc-500">{subtitle}</p>
+          )}
+        </div>
+        {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger
+            className="flex items-center gap-1.5 rounded-md border border-[var(--ff-border)] px-2.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
+            aria-label="Account menu"
           >
-            <DropdownMenu.Item className="cursor-default rounded px-3 py-2 text-sm text-slate-500 outline-none">
-              Profile (placeholder)
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="cursor-default rounded px-3 py-2 text-sm text-slate-500 outline-none">
-              Sign out (placeholder)
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-violet-100 text-[10px] font-bold text-violet-800">
+              DU
+            </span>
+            <span className="hidden sm:inline">Demo User</span>
+            <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="z-50 min-w-[200px] rounded-md border border-[var(--ff-border)] bg-white p-1 shadow-lg"
+              sideOffset={6}
+            >
+              <DropdownMenu.Item className="cursor-default rounded px-3 py-2 text-xs text-zinc-500 outline-none">
+                Profile (placeholder)
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className="cursor-default rounded px-3 py-2 text-xs text-zinc-500 outline-none">
+                Sign out (placeholder)
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </div>
-      <nav className="flex gap-1 border-t border-slate-100 py-2 md:hidden">
+      <nav className="flex gap-1 border-t border-zinc-100 px-2 py-1.5 md:hidden" aria-label="Mobile">
         <Link
           href="/meetings"
           className={cn(
-            "flex-1 rounded-md px-2 py-1.5 text-center text-xs font-medium",
+            "flex flex-1 items-center justify-center gap-1 rounded-md py-1.5 text-xs font-medium",
             pathname.startsWith("/meetings")
               ? "bg-violet-100 text-violet-800"
-              : "text-slate-600"
+              : "text-zinc-600"
           )}
         >
+          <LayoutGrid className="h-3.5 w-3.5" />
           Meetings
         </Link>
         <Link
           href="/settings"
           className={cn(
-            "flex-1 rounded-md px-2 py-1.5 text-center text-xs font-medium",
-            pathname === "/settings" ? "bg-violet-100 text-violet-800" : "text-slate-600"
+            "flex flex-1 items-center justify-center gap-1 rounded-md py-1.5 text-xs font-medium",
+            pathname === "/settings" ? "bg-violet-100 text-violet-800" : "text-zinc-600"
           )}
         >
+          <Settings className="h-3.5 w-3.5" />
           Settings
         </Link>
       </nav>

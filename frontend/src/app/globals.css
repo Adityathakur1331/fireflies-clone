@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ff-sidebar: #0f0f12;
+  --ff-sidebar-hover: #1a1a22;
+  --ff-sidebar-active: #2a2140;
+  --ff-accent: #7c3aed;
+  --ff-accent-muted: #a78bfa;
+  --ff-surface: #ffffff;
+  --ff-canvas: #f4f4f6;
+  --ff-border: #e4e4e8;
+  --ff-text: #18181b;
+  --ff-text-muted: #71717a;
+}
+
 body {
   min-height: 100vh;
+  background-color: var(--ff-canvas);
+  color: var(--ff-text);
+}
+
+@layer components {
+  .ff-panel {
+    @apply rounded-md border border-[var(--ff-border)] bg-white shadow-sm;
+  }
+  .ff-section-label {
+    @apply text-[11px] font-semibold uppercase tracking-wide text-violet-700;
+  }
 }

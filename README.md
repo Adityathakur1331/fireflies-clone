@@ -136,7 +136,7 @@ HTTP alternative: `POST http://localhost:8000/api/admin/seed`
 - Single implicit demo user (no auth).
 - Summaries are seeded/mock content, not live LLM output.
 - Transcript paste format: `[HH:MM:SS] Speaker: text` per line.
-- Media files are placeholders; timestamps are aligned for demo seeking within clip length.
+- Media files are placeholders (`sample-meeting.mp3` / `.mp4`, ~4:15 each); seed transcript timestamps end at or before 4:10 so seek/highlight stays within playable range.
 
 ## Out of scope
 

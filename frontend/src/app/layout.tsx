@@ -7,8 +7,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Northstar Notes",
-  description: "Fireflies-inspired meeting assistant workspace",
+  title: "Workspace — Meeting intelligence",
+  description: "Meeting library, transcripts, and AI summaries",
 };
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-100 text-slate-900 antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <QueryProvider>
           {children}
           <Toaster position="top-right" richColors />
