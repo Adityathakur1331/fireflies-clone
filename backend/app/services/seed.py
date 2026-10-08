@@ -12,10 +12,23 @@ from app.models import (
     SummaryChapter,
     TranscriptSegment,
 )
-from app.seed.meetings_data import MEETING_DEFINITIONS
+from app.seed.meetings_data import MEETING_DEFINITIONS, REQUIRED_MEDIA_DURATION_SEC
+
+
+def _validate_seed_timestamps() -> None:
+    max_end_ms = max(
+        seg["end_ms"] for defn in MEETING_DEFINITIONS for seg in defn["segments"]
+    )
+    cap_ms = REQUIRED_MEDIA_DURATION_SEC * 1000
+    if max_end_ms > cap_ms:
+        raise ValueError(
+            f"Seed transcript ends at {max_end_ms}ms but media cap is {cap_ms}ms. "
+            "Regenerate sample media or shorten segment timestamps."
+        )
 
 
 def run_seed(db: Session) -> None:
+    _validate_seed_timestamps()
     db.execute(delete(ActionItem))
     db.execute(delete(SummaryChapter))
     db.execute(delete(TranscriptSegment))

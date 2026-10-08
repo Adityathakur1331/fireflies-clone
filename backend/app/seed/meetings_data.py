@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 DEFAULT_MEDIA = "/media/sample-meeting.mp3"
+# Bundled placeholder media in frontend/public/media/ must be at least this long (seconds).
+REQUIRED_MEDIA_DURATION_SEC = 255
 
 
 def _lines(*pairs: tuple[str, str]) -> list[dict[str, str]]:
