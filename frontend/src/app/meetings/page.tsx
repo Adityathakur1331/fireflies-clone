@@ -17,6 +17,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 function MeetingsPageContent() {
+  return (
+    <AppShell title="Meetings" flush searchPlaceholder="Search by title or keyword">
+      <MeetingsWorkspace />
+    </AppShell>
+  );
+}
+
+function MeetingsWorkspace() {
   const searchParams = useSearchParams();
   const view = searchParams.get("view") ?? "mine";
   const urlQ = searchParams.get("q") ?? "";
@@ -73,7 +81,6 @@ function MeetingsPageContent() {
     hostTab === "hosted" && view !== "channels" && view !== "voice";
 
   return (
-    <AppShell title="Meetings" flush searchPlaceholder="Search by title or keyword">
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <MeetingsSecondarySidebar />
         <div className="flex min-h-0 min-w-0 flex-1 flex-col md:flex-row">
@@ -173,7 +180,6 @@ function MeetingsPageContent() {
           )}
         </div>
       </div>
-    </AppShell>
   );
 }
 
