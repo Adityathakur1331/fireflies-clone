@@ -27,7 +27,7 @@ export function MeetingList({ meetings }: { meetings: MeetingListItem[] }) {
 
   return (
     <div className="relative">
-      <div className="ff-panel overflow-hidden">
+      <div className="ff-meeting-list-shell">
         <ul className="divide-y divide-[var(--ff-border-subtle)]">
           {meetings.map((m) => (
             <MeetingRow
@@ -66,7 +66,7 @@ function MeetingRow({
     <li className="group relative">
       <Link
         href={`/meetings/${m.id}`}
-        className="flex flex-col gap-2 px-4 py-3 pr-24 transition-colors hover:bg-[var(--ff-sidebar-hover)] sm:flex-row sm:items-center sm:gap-4 sm:py-3.5 sm:pr-32"
+        className="flex flex-col gap-1.5 px-3 py-2.5 pr-24 transition-colors hover:bg-[var(--ff-sidebar-hover)] sm:flex-row sm:items-center sm:gap-3 sm:py-2.5 sm:pr-32"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3">
           <span

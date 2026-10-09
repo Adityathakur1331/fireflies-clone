@@ -60,4 +60,17 @@ body {
   .ff-disabled-label {
     @apply text-[var(--ff-text-muted)];
   }
+  .ff-meetings-shell {
+    @apply flex min-h-0 flex-1 bg-[var(--ff-canvas)];
+  }
+  .ff-meeting-list-shell {
+    @apply overflow-hidden rounded-md border border-[var(--ff-border-subtle)] bg-[var(--ff-bg)];
+  }
+  .ff-notepad-workspace {
+    @apply flex min-h-0 flex-1 flex-col bg-[var(--ff-canvas)] lg:flex-row;
+  }
+}
+.ff-transcript-line-active {
+  border-left: 2px solid var(--ff-accent);
+  background-color: color-mix(in srgb, var(--ff-accent) 12%, transparent);
 }

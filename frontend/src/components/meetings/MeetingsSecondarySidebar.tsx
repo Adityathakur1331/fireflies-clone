@@ -19,7 +19,7 @@ export function MeetingsSecondarySidebar() {
 
   return (
     <aside
-      className="hidden w-[220px] shrink-0 flex-col border-r border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)] lg:flex"
+      className="hidden w-[200px] shrink-0 flex-col border-r border-[var(--ff-border-subtle)] bg-[var(--ff-sidebar)] lg:flex xl:w-[212px]"
       aria-label="Meetings navigation"
     >
       <div className="p-3">

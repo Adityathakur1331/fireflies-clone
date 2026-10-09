@@ -161,8 +161,8 @@ export function TranscriptPanel({
               className={cn(
                 "mb-1 flex cursor-pointer gap-2.5 rounded-md border px-2 py-2 transition-colors",
                 isActive
-                  ? "border-[var(--ff-accent)]/60 bg-[var(--ff-accent)]/15 shadow-sm ring-1 ring-[var(--ff-accent)]/30"
-                  : "border-transparent hover:bg-[var(--ff-sidebar-hover)]",
+                  ? "ff-transcript-line-active border-transparent pl-[6px]"
+                  : "border-transparent pl-2 hover:bg-[var(--ff-sidebar-hover)]",
                 isMatch && !isActive && "bg-amber-950/30"
               )}
             >

@@ -14,8 +14,8 @@ A full-stack meeting-assistant workspace inspired by Fireflies.ai. Browse past m
 ## Architecture
 
 ```
-Browser (localhost:3000)
-    → REST JSON → FastAPI (localhost:8000)
+Browser (localhost:3000 or 127.0.0.1:3000)
+    → same-origin `/api/*` (Next.js rewrite) → FastAPI (127.0.0.1:8000)
                         → SQLAlchemy → SQLite (backend/data/fireflies.db)
 ```
 
@@ -99,7 +99,7 @@ npm install
 npm run dev -- --port 3000 --hostname 0.0.0.0
 ```
 
-Open **http://localhost:3000**. API base URL defaults to **http://localhost:8000** (`NEXT_PUBLIC_API_URL`).
+Open **http://localhost:3000** (or **http://127.0.0.1:3000**). By default the frontend proxies `/api` to FastAPI (`BACKEND_URL` in `frontend/.env.local`). Leave `NEXT_PUBLIC_API_URL` empty unless you need direct cross-origin calls.
 
 ### Quick verify (both servers running)
 
@@ -110,6 +110,10 @@ curl http://localhost:8000/api/tasks
 curl http://localhost:8000/api/workspace/stats
 open http://localhost:3000/meetings   # or visit in browser
 ```
+
+### Troubleshooting: “Failed to fetch” on Meetings or Tasks
+
+The UI calls **`/api/*` on the same origin** as Next.js. Ensure **both** servers are running and that `frontend/.env.local` has an **empty** `NEXT_PUBLIC_API_URL` (proxy mode). If you set `NEXT_PUBLIC_API_URL=http://localhost:8000` but open the app at **http://127.0.0.1:3000**, the browser blocks cross-origin requests (CORS). Restart Next after changing `.env.local` or `next.config.ts`.
 
 ### Troubleshooting: Tasks / Analytics return 404
 
@@ -126,7 +130,8 @@ Confirm routes exist: `curl -s http://localhost:8000/openapi.json | grep -E 'tas
 
 | Variable | Location | Default |
 |----------|----------|---------|
-| `NEXT_PUBLIC_API_URL` | `frontend/.env.local` | `http://localhost:8000` |
+| `NEXT_PUBLIC_API_URL` | `frontend/.env.local` | *(empty — use Next proxy)* |
+| `BACKEND_URL` | `frontend/.env.local` | `http://127.0.0.1:8000` |
 | `DATABASE_URL` | `backend/.env` | `sqlite:///data/fireflies.db` |
 | `CORS_ORIGINS` | `backend/.env` | `http://localhost:3000` |
 | `DEV_BOOTSTRAP` | `backend/.env` | `0` (set `1` only for optional `create_all` fallback) |

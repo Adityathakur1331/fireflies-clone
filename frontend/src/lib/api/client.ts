@@ -1,4 +1,16 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+/**
+ * API base URL. Empty string = same-origin `/api` (proxied by Next.js rewrites in dev/prod).
+ * Set NEXT_PUBLIC_API_URL only when the browser must call FastAPI directly (e.g. separate host).
+ */
+function resolveApiBase(): string {
+  const raw = process.env.NEXT_PUBLIC_API_URL;
+  if (raw === undefined || raw.trim() === "") {
+    return "";
+  }
+  return raw.replace(/\/$/, "");
+}
+
+const API_BASE = resolveApiBase();
 
 export class ApiError extends Error {
   constructor(

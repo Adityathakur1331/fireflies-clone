@@ -79,10 +79,10 @@ function MeetingsWorkspace() {
     hostTab === "hosted" && view !== "channels" && view !== "voice";
 
   return (
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      <div className="ff-meetings-shell flex-col lg:flex-row">
         <MeetingsSecondarySidebar />
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col md:flex-row">
-          <div className="relative min-h-0 min-w-0 flex-1 overflow-auto p-4 md:p-5">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:flex-row">
+          <div className="relative min-h-0 min-w-0 flex-1 overflow-auto px-4 py-3 md:px-5 md:py-4">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div className="flex gap-1 rounded-md border border-[var(--ff-border)] p-0.5">
                 <button

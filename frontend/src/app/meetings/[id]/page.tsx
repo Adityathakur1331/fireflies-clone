@@ -116,7 +116,7 @@ export default function MeetingDetailPage() {
 
       <NotepadToolbar meeting={meeting} />
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      <div className="ff-notepad-workspace">
         <NotepadIconRail onNavigate={handleRailNavigate} />
 
         <div

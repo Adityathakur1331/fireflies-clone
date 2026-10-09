@@ -50,7 +50,7 @@ export function MeetingsAskFredPanel({
   return (
     <aside
       className={cn(
-        "flex w-full shrink-0 flex-col border-t border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)] lg:w-[min(360px,32%)] lg:min-w-[280px] lg:border-l lg:border-t-0",
+        "flex w-full shrink-0 flex-col border-t border-[var(--ff-border-subtle)] bg-[var(--ff-sidebar)] lg:w-[min(340px,28%)] lg:min-w-[300px] lg:max-w-[360px] lg:border-l lg:border-t-0",
         className
       )}
       aria-label="AskFred"
