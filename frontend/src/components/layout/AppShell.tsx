@@ -1,3 +1,5 @@
+"use client";
+
 import { AppSidebar } from "./AppSidebar";
 import { SidebarCollapseProvider } from "./SidebarCollapseContext";
 import { TopNav } from "./TopNav";
