@@ -1,6 +1,7 @@
+import type { MeetingListItem } from "@/types/meeting";
 import {
   Bot,
-  Chrome,
+  Globe,
   Mic2,
   Monitor,
   Upload,
@@ -34,7 +35,7 @@ const SEED_CAPTURE: Record<number, CaptureSourceId> = {
 
 const META: Record<CaptureSourceId, CaptureSourceMeta> = {
   notetaker: { id: "notetaker", label: "Meeting notetaker", icon: Video },
-  chrome: { id: "chrome", label: "Chrome extension", icon: Chrome },
+  chrome: { id: "chrome", label: "Chrome extension", icon: Globe },
   desktop: { id: "desktop", label: "Desktop app", icon: Monitor },
   audio: { id: "audio", label: "Audio recording", icon: Mic2 },
   upload: { id: "upload", label: "Upload", icon: Upload },
@@ -47,9 +48,9 @@ export function getMeetingCaptureSource(meetingId: number): CaptureSourceMeta {
 }
 
 export function filterMeetingsByChannelView(
-  meetings: { id: number }[],
+  meetings: MeetingListItem[],
   view: string
-): typeof meetings {
+): MeetingListItem[] {
   switch (view) {
     case "uploads":
       return meetings.filter((m) => m.id === 5);

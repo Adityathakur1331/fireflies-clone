@@ -100,3 +100,17 @@ function AskFredPageContent() {
     </AppShell>
   );
 }
+
+export default function AskFredPage() {
+  return (
+    <Suspense
+      fallback={
+        <AppShell title="AskFred">
+          <p className="text-sm text-[var(--ff-text-muted)]">Loading…</p>
+        </AppShell>
+      }
+    >
+      <AskFredPageContent />
+    </Suspense>
+  );
+}
