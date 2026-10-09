@@ -120,7 +120,7 @@ export default function MeetingDetailPage() {
         <NotepadIconRail onNavigate={handleRailNavigate} />
 
         <div
-          className="flex min-h-0 min-w-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,11fr)_minmax(0,14fr)] lg:gap-0"
+          className="flex min-h-0 min-w-0 flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,42%)_minmax(0,58%)] lg:gap-0"
         >
           <aside
             className="order-2 flex min-h-[18rem] flex-col overflow-hidden border-t border-[var(--ff-border)] bg-[var(--ff-surface)] lg:order-1 lg:min-h-0 lg:border-r lg:border-t-0"

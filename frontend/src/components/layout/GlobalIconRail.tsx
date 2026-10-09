@@ -12,7 +12,7 @@ export function GlobalIconRail() {
 
   return (
     <aside
-      className="hidden w-[52px] shrink-0 flex-col items-center border-r border-[var(--ff-border-subtle)] bg-[var(--ff-bg)] py-2 md:flex"
+      className="hidden w-[52px] shrink-0 flex-col items-center border-r border-[var(--ff-border-subtle)] bg-[var(--ff-sidebar)] py-2 md:flex"
       aria-label="Primary navigation"
     >
       <Link

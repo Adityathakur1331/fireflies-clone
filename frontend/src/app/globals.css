@@ -5,7 +5,7 @@
 :root {
   --ff-bg: #09090b;
   --ff-canvas: #0c0c0e;
-  --ff-sidebar: #0a0a0c;
+  --ff-sidebar: #08080a;
   --ff-sidebar-hover: #18181b;
   --ff-sidebar-active: #1f1f23;
   --ff-sidebar-active-border: #3f3f46;
@@ -49,7 +49,7 @@ body {
     @apply flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[13px] font-medium text-[var(--ff-text-secondary)] transition-colors hover:bg-[var(--ff-sidebar-hover)] hover:text-[var(--ff-text)];
   }
   .ff-subnav-item-active {
-    @apply bg-[var(--ff-sidebar-active)] text-[var(--ff-text)];
+    @apply bg-[color-mix(in_srgb,var(--ff-accent)_14%,var(--ff-sidebar-active))] text-[var(--ff-text)] shadow-[inset_2px_0_0_0_var(--ff-accent)];
   }
   .ff-input-surface {
     @apply border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)];
@@ -64,10 +64,10 @@ body {
     @apply flex min-h-0 flex-1 bg-[var(--ff-canvas)];
   }
   .ff-meeting-list-shell {
-    @apply overflow-hidden rounded-md border border-[var(--ff-border-subtle)] bg-[var(--ff-bg)];
+    @apply overflow-hidden rounded-lg border border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)];
   }
   .ff-notepad-workspace {
-    @apply flex min-h-0 flex-1 flex-col bg-[var(--ff-canvas)] lg:flex-row;
+    @apply flex min-h-0 flex-1 flex-col bg-[var(--ff-canvas)] lg:min-h-[calc(100vh-6.75rem)] lg:flex-row;
   }
 }
 .ff-transcript-line-active {

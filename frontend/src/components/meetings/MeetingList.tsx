@@ -66,7 +66,7 @@ function MeetingRow({
     <li className="group relative">
       <Link
         href={`/meetings/${m.id}`}
-        className="flex flex-col gap-1.5 px-3 py-2.5 pr-24 transition-colors hover:bg-[var(--ff-sidebar-hover)] sm:flex-row sm:items-center sm:gap-3 sm:py-2.5 sm:pr-32"
+        className="flex flex-col gap-1 px-3 py-2 pr-24 transition-colors hover:bg-[var(--ff-sidebar-hover)] sm:flex-row sm:items-center sm:gap-3 sm:py-2 sm:pr-32"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3">
           <span

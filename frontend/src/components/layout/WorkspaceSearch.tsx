@@ -83,7 +83,7 @@ export function WorkspaceSearch({
           }
         }}
         placeholder={placeholder}
-        className="h-9 w-full rounded-full border border-[var(--ff-border)] bg-[var(--ff-surface)] py-1 pl-9 pr-16 text-sm text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--ff-accent)]"
+        className="h-[34px] w-full rounded-full border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] py-1 pl-9 pr-16 text-[13px] text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--ff-accent)]/60"
         aria-label="Search workspace"
         aria-controls={showMenu ? "workspace-search-menu" : undefined}
       />

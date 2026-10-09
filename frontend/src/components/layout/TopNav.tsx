@@ -23,7 +23,7 @@ export function TopNav({
 
   return (
     <header className="shrink-0 border-b border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)]">
-      <div className="flex h-12 items-center gap-2 px-3 md:gap-4 md:px-4">
+      <div className="flex h-[52px] items-center gap-2 px-3 md:gap-3 md:px-4">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--ff-border)] text-[var(--ff-text-secondary)] md:hidden"
@@ -50,12 +50,12 @@ export function TopNav({
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
 
-        <h1 className="shrink-0 text-sm font-semibold text-[var(--ff-text)] md:min-w-[100px]">
+        <h1 className="shrink-0 text-[13px] font-medium text-[var(--ff-text-secondary)] md:min-w-[88px] md:max-w-[140px] truncate">
           {title ?? "Home"}
         </h1>
 
-        <div className="hidden min-w-0 flex-1 md:block">
-          <WorkspaceSearch placeholder={searchPlaceholder} />
+        <div className="hidden min-w-0 flex-1 justify-center md:flex">
+          <WorkspaceSearch className="max-w-2xl" placeholder={searchPlaceholder} />
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
