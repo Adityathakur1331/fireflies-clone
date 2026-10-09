@@ -43,7 +43,7 @@ function NavLink({
         "flex items-center rounded-md text-[13px] font-medium transition-colors",
         collapsed ? "justify-center px-2 py-2" : "gap-2.5 px-2.5 py-[7px]",
         active
-          ? "bg-[var(--ff-sidebar-active)] text-[var(--ff-text)] ring-1 ring-[var(--ff-sidebar-active-border)]"
+          ? "bg-[var(--ff-sidebar-active)] text-[var(--ff-text)] shadow-[inset_2px_0_0_0_var(--ff-accent)]"
           : "text-[var(--ff-text-secondary)] hover:bg-[var(--ff-sidebar-hover)] hover:text-[var(--ff-text)]"
       )}
     >
@@ -66,7 +66,7 @@ export function AppSidebar() {
     <aside
       className={cn(
         "hidden shrink-0 flex-col border-r border-[var(--ff-border-subtle)] bg-[var(--ff-sidebar)] transition-[width] duration-200 md:flex",
-        collapsed ? "w-[64px]" : "w-[200px]"
+        collapsed ? "w-[52px]" : "w-[200px]"
       )}
     >
       <button

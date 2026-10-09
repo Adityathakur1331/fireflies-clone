@@ -24,7 +24,7 @@ export function NotepadToolbar({ meeting }: { meeting: MeetingDetail }) {
 
   return (
     <header
-      className="flex flex-col gap-3 border-b border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)] px-3 py-3 md:flex-row md:items-center md:justify-between md:px-4"
+      className="flex flex-col gap-3 border-b border-[var(--ff-border-subtle)] bg-[var(--ff-surface)] px-3 py-2.5 md:flex-row md:items-center md:justify-between md:px-4"
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 text-[11px] text-[var(--ff-text-muted)]">

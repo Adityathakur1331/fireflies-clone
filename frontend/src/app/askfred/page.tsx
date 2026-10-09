@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Send, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
-import { AskFredSidebar } from "@/components/askfred/AskFredSidebar";
+import { AskFredHistorySidebar, AskFredSidebar } from "@/components/askfred/AskFredSidebar";
 import { answerAskFred, getSuggestedQuestions } from "@/lib/askfred";
 import { fetchMeetings } from "@/lib/api/meetings";
 import { fetchAllTasks, fetchWorkspaceStats } from "@/lib/api/workspace";
@@ -48,7 +48,8 @@ function AskFredPageContent() {
     <AppShell title="AskFred" flush searchPlaceholder="Search by title or keyword">
       <div className="flex min-h-0 flex-1">
         <AskFredSidebar />
-        <div className="flex flex-1 flex-col items-center overflow-auto px-4 py-8 md:px-8">
+        <AskFredHistorySidebar />
+        <div className="flex flex-1 flex-col items-center overflow-auto bg-[var(--ff-bg)] px-4 py-8 md:px-8">
           <div className="w-full max-w-2xl flex-1">
             <h2 className="text-center text-2xl font-semibold text-[var(--ff-text)] md:text-3xl">
               Hi Aditya, how can I help today?

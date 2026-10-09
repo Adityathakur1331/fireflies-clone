@@ -26,12 +26,14 @@ export function SidebarCollapseProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsedState] = useState(false);
+  /** Fireflies uses a compact icon rail by default. */
+  const [collapsed, setCollapsedState] = useState(true);
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored === "1") setCollapsedState(true);
+      if (stored === "0") setCollapsedState(false);
+      else if (stored === "1") setCollapsedState(true);
     } catch {
       /* ignore */
     }

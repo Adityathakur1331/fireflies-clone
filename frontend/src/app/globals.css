@@ -74,3 +74,9 @@ body {
   border-left: 2px solid var(--ff-accent);
   background-color: color-mix(in srgb, var(--ff-accent) 12%, transparent);
 }
+.ff-askfred-rail-btn {
+  @apply flex h-9 w-9 items-center justify-center rounded-md text-[var(--ff-text-secondary)] transition-colors hover:bg-[var(--ff-sidebar-hover)] hover:text-[var(--ff-text)];
+}
+.ff-askfred-rail-btn-active {
+  @apply bg-[var(--ff-sidebar-active)] text-[var(--ff-text)] shadow-[inset_2px_0_0_0_var(--ff-accent)];
+}
