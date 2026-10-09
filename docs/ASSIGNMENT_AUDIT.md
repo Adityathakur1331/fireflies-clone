@@ -1,7 +1,7 @@
 # Scaler SDE Fullstack — Fireflies clone assignment audit
 
 **Audit date:** 2026-10-09  
-**Note:** Assignment PDF and Fireflies screenshots were referenced from the project brief and prior Fireflies Knowledge Base; PDF binary was not present in the repository at audit time.
+**Note:** Fireflies reference screenshots were supplied in the project brief. The assignment PDF binary is **not** in the repository (`**/*.pdf` search returns none); requirements below follow `README.md`, `CHECKLIST.md`, and implemented APIs/tests.
 
 ## Requirement status
 

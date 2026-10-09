@@ -126,6 +126,10 @@ export default function MeetingDetailPage() {
             className="order-2 flex min-h-[18rem] flex-col overflow-hidden border-t border-[var(--ff-border)] bg-[var(--ff-surface)] lg:order-1 lg:min-h-0 lg:border-r lg:border-t-0"
             aria-label="Meeting intelligence"
           >
+            <div className="shrink-0 border-b border-[var(--ff-border-subtle)] px-4 py-2.5">
+              <h2 className="text-[13px] font-semibold text-[var(--ff-text)]">Notes</h2>
+              <p className="text-[11px] text-[var(--ff-text-muted)]">Summary, topics, action items & chapters</p>
+            </div>
             <div ref={intelligenceScrollRef} className="min-h-0 flex-1 overflow-y-auto">
               {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
                 <p className="p-4 text-sm text-[var(--ff-text-muted)]">Loading summary…</p>

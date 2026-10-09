@@ -1,6 +1,7 @@
 "use client";
 
-import { Clock } from "lucide-react";
+import { Clock, Users } from "lucide-react";
+import { speakerInitials, speakerColorClass } from "@/lib/speaker";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { toast } from "sonner";
 import type { MeetingDetail } from "@/types/meeting";
@@ -41,6 +42,35 @@ export function NotepadToolbar({ meeting }: { meeting: MeetingDetail }) {
         <h1 className="mt-1 truncate text-base font-semibold text-[var(--ff-text)] md:text-lg">
           {meeting.title}
         </h1>
+        {meeting.participants.length > 0 && (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 text-[11px] text-[var(--ff-text-muted)]">
+              <Users className="h-3 w-3" aria-hidden />
+              Participants
+            </span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {meeting.participants.slice(0, 6).map((p) => (
+                <span
+                  key={p.id}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--ff-border-subtle)] bg-[var(--ff-surface-elevated)] px-2 py-0.5 text-[11px] text-[var(--ff-text-secondary)]"
+                  title={p.email ?? undefined}
+                >
+                  <span
+                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold ${speakerColorClass(p.display_name)}`}
+                  >
+                    {speakerInitials(p.display_name)}
+                  </span>
+                  {p.display_name}
+                </span>
+              ))}
+              {meeting.participants.length > 6 && (
+                <span className="text-[11px] text-[var(--ff-text-muted)]">
+                  +{meeting.participants.length - 6}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex shrink-0 flex-wrap items-center gap-2">

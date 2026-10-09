@@ -2,9 +2,17 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Send, Sparkles } from "lucide-react";
+import {
+  Bot,
+  CheckCircle2,
+  Hash,
+  Pin,
+  Plus,
+  Send,
+  Sparkles,
+} from "lucide-react";
 import type { MeetingListItem } from "@/types/meeting";
-import { answerAskFred, getSuggestedQuestions } from "@/lib/askfred";
+import { answerAskFred } from "@/lib/askfred";
 import { fetchAllTasks, fetchWorkspaceStats } from "@/lib/api/workspace";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,6 +23,12 @@ const CHANNEL_LABEL: Record<string, string> = {
   uploads: "Uploads",
   voice: "Voice Agent Meetings",
 };
+
+const QUICK_PROMPTS = [
+  { label: "My action items", icon: CheckCircle2, q: "What are my outstanding action items?" },
+  { label: "Key decisions", icon: Pin, q: "What were the main decisions from my meetings?" },
+  { label: "Key initiatives", icon: Pin, q: "What topics were discussed most?" },
+];
 
 export function MeetingsAskFredPanel({
   meetings,
@@ -38,7 +52,6 @@ export function MeetingsAskFredPanel({
   });
 
   const channelLabel = CHANNEL_LABEL[channelView] ?? "Meetings";
-  const suggested = getSuggestedQuestions().slice(0, 3);
 
   const submit = (q: string) => {
     const tasks = tasksQuery.data ?? [];
@@ -50,46 +63,65 @@ export function MeetingsAskFredPanel({
   return (
     <aside
       className={cn(
-        "flex w-full shrink-0 flex-col border-t border-[var(--ff-border-subtle)] bg-[var(--ff-sidebar)] lg:w-[min(340px,28%)] lg:min-w-[300px] lg:max-w-[360px] lg:border-l lg:border-t-0",
+        "flex w-full shrink-0 flex-col border-t border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)] lg:w-[min(340px,28%)] lg:min-w-[300px] lg:max-w-[360px] lg:border-l lg:border-t-0",
         className
       )}
       aria-label="AskFred"
     >
-      <header className="border-b border-[var(--ff-border-subtle)] px-4 py-3">
+      <header className="flex items-center justify-between border-b border-[var(--ff-border-subtle)] px-3 py-2.5">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-[var(--ff-accent-muted)]" aria-hidden />
-          <h2 className="text-sm font-semibold text-[var(--ff-text)]">AskFred</h2>
+          <Bot className="h-4 w-4 text-[var(--ff-accent-muted)]" aria-hidden />
+          <h2 className="text-[13px] font-semibold text-[var(--ff-text)]">Ask Fred</h2>
         </div>
-        <p className="mt-1 text-[11px] text-[var(--ff-text-muted)]">
-          Answers use meetings in <span className="font-medium text-[var(--ff-text-secondary)]">{channelLabel}</span>{" "}
-          ({meetings.length} in context).
-        </p>
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-3">
-        {answer && (
-          <div className="mb-3 max-h-[40%] shrink-0 overflow-y-auto rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface)] p-3">
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--ff-text-secondary)]">
-              {answer}
-            </p>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="border-b border-[var(--ff-border-subtle)] px-3 py-2">
+          <div className="rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface)] px-3 py-2.5 text-[11px] text-[var(--ff-text-secondary)]">
+            Connect Slack and Gmail for richer answers —{" "}
+            <span className="text-[var(--ff-accent-muted)]">Connect (demo)</span>
           </div>
-        )}
+        </div>
 
-        <div className="mt-auto space-y-2">
-          <div className="space-y-1.5">
-            {suggested.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => submit(s)}
-                className="w-full rounded-md border border-[var(--ff-border)] px-2.5 py-2 text-left text-[11px] leading-snug text-[var(--ff-text-secondary)] hover:border-[var(--ff-accent)]/30 hover:bg-[var(--ff-sidebar-hover)]"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-1 flex-col items-center justify-center px-4 py-6 text-center">
+          {!answer ? (
+            <>
+              <Sparkles className="h-5 w-5 text-emerald-400/90" aria-hidden />
+              <p className="mt-3 text-sm font-medium text-[var(--ff-text)]">
+                Hi ADITYA! Get ready for your meeting
+              </p>
+              <p className="mt-1 text-[11px] text-[var(--ff-text-muted)]">
+                {meetings.length} meeting{meetings.length === 1 ? "" : "s"} in {channelLabel}
+              </p>
+              <div className="mt-4 flex w-full max-w-[260px] flex-col gap-2">
+                {QUICK_PROMPTS.map(({ label, icon: Icon, q }) => (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => submit(q)}
+                    className="flex items-center gap-2 rounded-lg border border-[var(--ff-border)] bg-[var(--ff-surface)] px-3 py-2 text-left text-[12px] text-[var(--ff-text-secondary)] hover:border-[var(--ff-border)] hover:bg-[var(--ff-sidebar-hover)]"
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0 text-[var(--ff-text-muted)]" />
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="w-full max-h-full overflow-y-auto text-left">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--ff-text-secondary)]">
+                {answer}
+              </p>
+            </div>
+          )}
+        </div>
 
-          <div className="rounded-lg border border-[var(--ff-accent)]/30 bg-[var(--ff-surface)] p-2">
+        <div className="border-t border-[var(--ff-border-subtle)] p-3">
+          <p className="mb-1.5 flex items-center gap-1 text-[11px] text-[var(--ff-text-muted)]">
+            <Hash className="h-3 w-3" aria-hidden />
+            {channelLabel}
+          </p>
+          <div className="rounded-lg border border-[var(--ff-border)] bg-[var(--ff-surface)] p-2">
             <textarea
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -99,13 +131,16 @@ export function MeetingsAskFredPanel({
                   if (query.trim()) submit(query);
                 }
               }}
-              placeholder="Ask about this channel…"
-              rows={3}
-              className="w-full resize-none bg-transparent text-sm text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)] focus:outline-none"
+              placeholder="Ask anything. Type / to run AI skills."
+              rows={2}
+              className="w-full resize-none bg-transparent text-[13px] text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)] focus:outline-none"
               aria-label="AskFred question"
             />
-            <div className="flex justify-end pt-1">
-              <Button size="sm" disabled={!query.trim()} onClick={() => submit(query)}>
+            <div className="mt-1 flex items-center justify-between">
+              <button type="button" className="rounded p-1 text-[var(--ff-text-muted)]" aria-label="Add">
+                <Plus className="h-4 w-4" />
+              </button>
+              <Button size="sm" className="h-7 w-7 p-0" disabled={!query.trim()} onClick={() => submit(query)}>
                 <Send className="h-3.5 w-3.5" aria-hidden />
               </Button>
             </div>

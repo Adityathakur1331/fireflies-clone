@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 
 const links = [
-  { id: "mine", label: "My Meetings", icon: LayoutGrid, href: "/meetings?view=mine" },
+  { id: "mine", label: "My Meetings", icon: Hash, href: "/meetings?view=mine" },
   { id: "all", label: "All Meetings", icon: LayoutGrid, href: "/meetings?view=all" },
   { id: "voice", label: "Voice Agent Meetings", icon: Mic, href: "/meetings?view=voice", soon: true },
   { id: "uploads", label: "Uploads", icon: Upload, href: "/meetings?view=uploads", badge: "NEW" },

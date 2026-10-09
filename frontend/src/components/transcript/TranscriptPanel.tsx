@@ -87,7 +87,7 @@ export function TranscriptPanel({
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search
-              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400"
+              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--ff-text-muted)]"
               aria-hidden
             />
             <Input
@@ -101,7 +101,7 @@ export function TranscriptPanel({
             {searchQuery && (
               <button
                 type="button"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-zinc-400 hover:text-zinc-700"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-[var(--ff-text-muted)] hover:text-[var(--ff-text)]"
                 aria-label="Clear search"
                 onClick={() => onSearchChange("")}
               >

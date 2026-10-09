@@ -3,10 +3,10 @@ import type { MeetingListItem } from "@/types/meeting";
 import { formatDuration } from "@/lib/utils";
 
 const SUGGESTED = [
-  "What were the main decisions from my meetings?",
-  "What are my outstanding action items?",
-  "Summarize this week's meetings.",
-  "What topics were discussed most?",
+  "List my action items & todos for this week",
+  "Summarize my last meeting",
+  "Prepare me for the upcoming meeting",
+  "Prepare weekly digest, based on my meetings",
 ];
 
 export function getSuggestedQuestions() {
@@ -46,6 +46,32 @@ export function answerAskFred(
     }
     const lines = topTopics.map((t) => `• ${t.topic} (${t.count} meeting${t.count === 1 ? "" : "s"})`);
     return `Most common key topics across your library:\n\n${lines.join("\n")}`;
+  }
+
+  if (q.includes("last meeting") || (q.includes("summarize") && q.includes("last"))) {
+    const latest = meetings[0];
+    if (!latest) return "No meetings in your workspace yet.";
+    return (
+      `Your most recent meeting is “${latest.title}” (${new Date(latest.occurred_at).toLocaleDateString()}, ` +
+      `${formatDuration(latest.duration_ms)}). Open the notepad for the seeded AI summary, chapters, and transcript.`
+    );
+  }
+
+  if (q.includes("prepare") && q.includes("upcoming")) {
+    return (
+      "Upcoming calendar prep is not connected in this demo build. " +
+      "Use your latest meetings and open action items to rehearse talking points, or open a recent notepad for chapter timestamps."
+    );
+  }
+
+  if (q.includes("digest") || q.includes("weekly")) {
+    const recent = meetings.slice(0, 5);
+    if (!recent.length) return "No meetings in your workspace yet.";
+    const lines = recent.map(
+      (m) =>
+        `• ${m.title} — ${new Date(m.occurred_at).toLocaleDateString()} (${formatDuration(m.duration_ms)})`
+    );
+    return `Weekly digest (from your library):\n\n${lines.join("\n")}\n\nOpen any meeting for full AI summary and action items.`;
   }
 
   if (q.includes("summarize") || q.includes("week") || q.includes("recent")) {

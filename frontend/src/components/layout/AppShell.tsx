@@ -1,9 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { AppSidebar } from "./AppSidebar";
+import { GlobalIconRail } from "./GlobalIconRail";
 import { SidebarCollapseProvider } from "./SidebarCollapseContext";
 import { TopNav } from "./TopNav";
 import { WorkspaceSearchProvider } from "./WorkspaceSearchContext";
+
+function useIconRailOnlyLayout() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/askfred")) return true;
+  // Icon rail matches Fireflies list views only; notepad uses the full sidebar.
+  return pathname === "/meetings";
+}
 
 export function AppShell({
   children,
@@ -23,11 +32,13 @@ export function AppShell({
   flush?: boolean;
   searchPlaceholder?: string;
 }) {
+  const iconRailOnly = useIconRailOnlyLayout();
+
   return (
     <SidebarCollapseProvider>
       <WorkspaceSearchProvider>
         <div className="flex min-h-screen bg-[var(--ff-bg)]">
-          <AppSidebar />
+          {iconRailOnly ? <GlobalIconRail /> : <AppSidebar />}
           <div className="flex min-w-0 flex-1 flex-col">
             <TopNav
               title={title}
