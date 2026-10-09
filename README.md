@@ -1,4 +1,4 @@
-# Northstar Notes — Fireflies Clone (SDE Assignment)
+# Fireflies Clone — AI Meeting Assistant
 
 A full-stack meeting-assistant workspace inspired by Fireflies.ai. Browse past meetings, read interactive transcripts synced to sample media, review AI-style summaries, and manage action items. Speech-to-text and real authentication are intentionally mocked.
 
@@ -6,9 +6,8 @@ A full-stack meeting-assistant workspace inspired by Fireflies.ai. Browse past m
 
 | Item | URL / status |
 |------|----------------|
-| **Source (Cursor Origin)** | https://origin.cursor.com/aditya-thakur/tmp-546d8d7de49f2654 — **private** (verified via `origin repo view`; not a public GitHub repo yet) |
-| **Public GitHub** | **Not published** — create a public repo under your GitHub account and push `main` (see [Preparing GitHub for submission](#preparing-github-for-submission)) |
-| **Live demo** | https://polymer-decreased-fax-mystery.trycloudflare.com — **verified 2026-10-09** (`/meetings`, `/meetings/1`, `/api/meetings` → 6 seeded meetings). Temporary Cloudflare quick tunnel; use [Render](#deployment) for a persistent host. |
+| **Public GitHub** | https://github.com/Adityathakur1331/fireflies-clone |
+| **Temporary demo — availability may vary** | https://polymer-decreased-fax-mystery.trycloudflare.com (Cloudflare quick tunnel; may go offline when the tunnel stops). Use [Render](#deployment) for a persistent host. |
 
 **Persistence on demo:** SQLite runs inside the demo process; data resets if the host restarts or redeploys. Seeding runs on container/process start (`alembic upgrade head` + `python -m app.seed`).
 
@@ -253,11 +252,26 @@ cd frontend && npm run build && npm run start -- -p 3000
 
 ## Preparing GitHub for submission
 
-1. Create a **public** repository on GitHub.
-2. Push this project: `git remote add origin <url>` then `git push -u origin main`.
-3. Add a short **repository description** and link to hosted demo in README when ready.
-4. Optional: add screenshots under `docs/screenshots/` and reference them in README.
-5. Verify clone-from-scratch: follow Setup instructions on a clean machine.
+The public repository is already published at [github.com/Adityathakur1331/fireflies-clone](https://github.com/Adityathakur1331/fireflies-clone).
+
+**Verify it is public:** open that URL in a browser where you are **not** logged into GitHub (or use a private window). You should see the repo and `main` without signing in.
+
+**Push future changes** (this workspace uses `origin` for Cursor Origin and `github` for GitHub):
+
+```bash
+git push github main
+# optional: also push to Cursor Origin
+git push origin main
+```
+
+If `github` is not configured yet:
+
+```bash
+git remote add github https://github.com/Adityathakur1331/fireflies-clone.git
+git push -u github main
+```
+
+Optional: add screenshots under `docs/screenshots/` and confirm clone-from-scratch by following [Setup instructions](#setup-instructions) on a clean machine.
 
 ## Screenshots / demo
 
