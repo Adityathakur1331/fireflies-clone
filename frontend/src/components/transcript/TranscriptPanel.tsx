@@ -109,7 +109,7 @@ export function TranscriptPanel({
             )}
           </div>
           {q && (
-            <div className="flex items-center gap-1 text-xs text-zinc-600">
+            <div className="flex items-center gap-1 text-xs text-[var(--ff-text-secondary)]">
               <span className="whitespace-nowrap tabular-nums">
                 {matchingIds.length
                   ? `${matchIndex + 1} / ${matchingIds.length}`
@@ -143,7 +143,7 @@ export function TranscriptPanel({
       </div>
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {q && !matchingIds.length && (
-          <p className="px-2 py-8 text-center text-sm text-zinc-500">
+          <p className="px-2 py-8 text-center text-sm text-[var(--ff-text-muted)]">
             No matches for &ldquo;{searchQuery.trim()}&rdquo;
           </p>
         )}

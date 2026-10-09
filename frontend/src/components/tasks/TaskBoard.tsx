@@ -70,7 +70,7 @@ export function TaskBoard({
 
   if (!filtered.length) {
     return (
-      <div className="ff-panel px-6 py-14 text-center text-sm text-zinc-500">
+      <div className="ff-panel px-6 py-14 text-center text-sm text-[var(--ff-text-muted)]">
         No tasks in this view.
       </div>
     );
@@ -128,13 +128,13 @@ export function TaskBoard({
                     <p
                       className={
                         t.is_completed
-                          ? "text-sm text-zinc-400 line-through"
-                          : "text-sm font-medium text-zinc-900"
+                          ? "text-sm text-[var(--ff-text-muted)] line-through"
+                          : "text-sm font-medium text-[var(--ff-text)]"
                       }
                     >
                       {t.title}
                     </p>
-                    <p className="mt-0.5 text-xs text-zinc-500">
+                    <p className="mt-0.5 text-xs text-[var(--ff-text-muted)]">
                       {t.assignee ? `${t.assignee} · ` : ""}
                       {formatDate(t.meeting_occurred_at)}
                     </p>

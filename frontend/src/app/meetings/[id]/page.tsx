@@ -65,7 +65,7 @@ export default function MeetingDetailPage() {
   if (meetingQuery.isLoading) {
     return (
       <AppShell title="Meeting" fullWidth>
-        <div className="p-6 text-sm text-zinc-500">Loading meeting…</div>
+        <div className="p-6 text-sm text-[var(--ff-text-muted)]">Loading meeting…</div>
       </AppShell>
     );
   }
@@ -86,7 +86,7 @@ export default function MeetingDetailPage() {
       <div className="border-b border-[var(--ff-border-subtle)] bg-[var(--ff-canvas)] px-4 py-2 md:px-5">
         <Link
           href="/meetings"
-          className="inline-flex items-center gap-1 text-xs font-medium text-zinc-600 hover:text-violet-700"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[var(--ff-text-secondary)] hover:text-[var(--ff-accent-muted)]"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
           All meetings
@@ -105,12 +105,12 @@ export default function MeetingDetailPage() {
             aria-label="Meeting intelligence"
           >
             <header className="shrink-0 border-b border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] px-4 py-3">
-              <h2 className="text-sm font-semibold text-zinc-900">Notepad</h2>
-              <p className="text-xs text-zinc-500">AI summary, notes, and action items</p>
+              <h2 className="text-sm font-semibold text-[var(--ff-text)]">Notepad</h2>
+              <p className="text-xs text-[var(--ff-text-muted)]">AI summary, notes, and action items</p>
             </header>
             <div className="min-h-0 flex-1 bg-[var(--ff-surface)]">
               {(summaryQuery.isLoading || actionItemsQuery.isLoading) && (
-                <p className="p-4 text-sm text-zinc-500">Loading summary…</p>
+                <p className="p-4 text-sm text-[var(--ff-text-muted)]">Loading summary…</p>
               )}
               {(summaryQuery.isError || actionItemsQuery.isError) && (
                 <p className="p-4 text-sm text-red-600">Failed to load summary or action items.</p>
@@ -143,14 +143,14 @@ export default function MeetingDetailPage() {
                   <ListTree className="h-3.5 w-3.5" aria-hidden />
                   {followTranscript ? "Auto-scroll on" : "Auto-scroll off"}
                 </Button>
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-[var(--ff-text-muted)]">
                   Click any line to seek playback
                 </span>
               </div>
             </div>
             <div className="min-h-[20rem] flex-1 lg:min-h-0">
               {transcriptQuery.isLoading && (
-                <p className="p-4 text-sm text-zinc-500">Loading transcript…</p>
+                <p className="p-4 text-sm text-[var(--ff-text-muted)]">Loading transcript…</p>
               )}
               {transcriptQuery.isError && (
                 <p className="p-4 text-sm text-red-600">Failed to load transcript.</p>

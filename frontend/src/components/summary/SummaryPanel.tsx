@@ -86,7 +86,7 @@ export function SummaryPanel({
           {summary.overview ?? "No overview available."}
         </p>
         {summary.gist && (
-          <p className="mt-3 border-l-2 border-violet-300 pl-3 text-sm font-medium text-zinc-800">
+          <p className="mt-3 border-l-2 border-[var(--ff-accent)]/50 pl-3 text-sm font-medium text-[var(--ff-text)]">
             {summary.gist}
           </p>
         )}
@@ -108,7 +108,7 @@ export function SummaryPanel({
 
       <section className="border-b border-[var(--ff-border)] px-4 py-4">
         <h3 className="ff-section-label mb-2">Meeting notes</h3>
-        <p className="text-sm leading-relaxed text-zinc-600">
+        <p className="text-sm leading-relaxed text-[var(--ff-text-secondary)]">
           Structured notes are derived from the seeded summary above. Connect a live notetaker
           for real-time capture (coming soon).
         </p>
@@ -121,7 +121,7 @@ export function SummaryPanel({
             <li key={ch.id}>
               <button
                 type="button"
-                className="flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm text-zinc-800 hover:bg-zinc-50"
+                className="flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm text-[var(--ff-text)] hover:bg-[var(--ff-sidebar-hover)]"
                 onClick={() => onChapterClick?.(ch.start_ms)}
               >
                 <span className="pr-2">{ch.title}</span>
@@ -137,7 +137,7 @@ export function SummaryPanel({
       <section className="px-4 py-4">
         <h3 className="ff-section-label mb-3">Action items</h3>
         {actionItems.length === 0 && (
-          <p className="mb-3 text-sm text-zinc-500">No action items yet. Add one below.</p>
+          <p className="mb-3 text-sm text-[var(--ff-text-muted)]">No action items yet. Add one below.</p>
         )}
         <ul className="space-y-2">
           {actionItems.map((item) => (
@@ -150,7 +150,7 @@ export function SummaryPanel({
                 onCheckedChange={(v) =>
                   toggleMutation.mutate({ id: item.id, done: v === true })
                 }
-                className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border border-zinc-300 data-[state=checked]:border-violet-600 data-[state=checked]:bg-violet-600 data-[state=checked]:text-white"
+                className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border border-[var(--ff-border)] data-[state=checked]:border-[var(--ff-accent)] data-[state=checked]:bg-[var(--ff-accent)] data-[state=checked]:text-white"
                 aria-label={`Mark ${item.title} complete`}
               >
                 <Checkbox.Indicator>
@@ -183,14 +183,14 @@ export function SummaryPanel({
                     <p
                       className={
                         item.is_completed
-                          ? "text-sm text-zinc-400 line-through"
-                          : "text-sm text-zinc-800"
+                          ? "text-sm text-[var(--ff-text-muted)] line-through"
+                          : "text-sm text-[var(--ff-text)]"
                       }
                     >
                       {item.title}
                     </p>
                     {item.assignee && (
-                      <p className="text-xs text-zinc-500">Owner: {item.assignee}</p>
+                      <p className="text-xs text-[var(--ff-text-muted)]">Owner: {item.assignee}</p>
                     )}
                   </>
                 )}

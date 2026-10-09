@@ -17,15 +17,17 @@ export default function IntegrationsPage() {
         {integrations.map((i) => (
           <article
             key={i.name}
-            className="ff-panel flex items-start gap-3 p-4"
+            className="ff-panel flex items-start gap-3 p-4 opacity-95"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-md bg-zinc-100 text-zinc-600">
+            <span
+              className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--ff-surface-elevated)] text-[var(--ff-text-secondary)]"
+            >
               <i.icon className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="text-sm font-semibold text-zinc-900">{i.name}</h2>
-              <p className="text-xs text-zinc-500">{i.category}</p>
-              <p className="mt-2 text-xs font-medium text-zinc-400">Coming soon</p>
+              <h2 className="text-sm font-semibold text-[var(--ff-text)]">{i.name}</h2>
+              <p className="text-xs text-[var(--ff-text-muted)]">{i.category}</p>
+              <p className="mt-2 text-xs font-medium ff-disabled-label">Coming soon</p>
             </div>
           </article>
         ))}

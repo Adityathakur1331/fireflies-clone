@@ -35,7 +35,7 @@ export function MeetingListRowMenu({ meeting }: { meeting: MeetingListItem }) {
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
-          className="rounded-md p-1.5 text-zinc-400 opacity-0 transition-opacity hover:bg-white hover:text-zinc-700 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 group-hover:opacity-100 data-[state=open]:opacity-100"
+          className="rounded-md p-1.5 text-[var(--ff-text-muted)] opacity-0 transition-opacity hover:bg-[var(--ff-sidebar-hover)] hover:text-[var(--ff-text)] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 group-hover:opacity-100 data-[state=open]:opacity-100"
           aria-label={`Actions for ${meeting.title}`}
           onClick={(e) => {
             e.preventDefault();
@@ -47,35 +47,35 @@ export function MeetingListRowMenu({ meeting }: { meeting: MeetingListItem }) {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="z-50 min-w-[180px] rounded-md border border-[var(--ff-border)] bg-white p-1 shadow-lg"
+              className="z-50 min-w-[180px] rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] p-1 shadow-xl"
             sideOffset={4}
             align="end"
           >
             <DropdownMenu.Item
-              className="cursor-pointer rounded px-3 py-2 text-sm outline-none hover:bg-zinc-50"
+                className="cursor-pointer rounded px-3 py-2 text-sm text-[var(--ff-text)] outline-none hover:bg-[var(--ff-sidebar-hover)]"
               onSelect={() => router.push(`/meetings/${meeting.id}`)}
             >
               Open
             </DropdownMenu.Item>
             <DropdownMenu.Item
-              className="cursor-pointer rounded px-3 py-2 text-sm outline-none hover:bg-zinc-50"
+                className="cursor-pointer rounded px-3 py-2 text-sm text-[var(--ff-text)] outline-none hover:bg-[var(--ff-sidebar-hover)]"
               onSelect={() => setEditOpen(true)}
             >
               Rename / edit
             </DropdownMenu.Item>
             <DropdownMenu.Item
-              className="cursor-pointer rounded px-3 py-2 text-sm outline-none hover:bg-zinc-50"
+                className="cursor-pointer rounded px-3 py-2 text-sm text-[var(--ff-text)] outline-none hover:bg-[var(--ff-sidebar-hover)]"
               onSelect={() => setInfoOpen(true)}
             >
               Meeting info
             </DropdownMenu.Item>
             <DropdownMenu.Item
-              className="cursor-pointer rounded px-3 py-2 text-sm outline-none hover:bg-zinc-50"
+                className="cursor-pointer rounded px-3 py-2 text-sm text-[var(--ff-text)] outline-none hover:bg-[var(--ff-sidebar-hover)]"
               onSelect={copyLink}
             >
               Copy link
             </DropdownMenu.Item>
-            <DropdownMenu.Separator className="my-1 h-px bg-zinc-100" />
+            <DropdownMenu.Separator className="my-1 h-px bg-[var(--ff-border)]" />
             <DropdownMenu.Item asChild onSelect={(e) => e.preventDefault()}>
               <DeleteMeetingDialog
                 meetingId={meeting.id}

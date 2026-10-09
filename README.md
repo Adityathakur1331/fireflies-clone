@@ -106,8 +106,21 @@ Open **http://localhost:3000**. API base URL defaults to **http://localhost:8000
 ```bash
 curl http://localhost:8000/api/health
 curl http://localhost:8000/api/meetings
+curl http://localhost:8000/api/tasks
+curl http://localhost:8000/api/workspace/stats
 open http://localhost:3000/meetings   # or visit in browser
 ```
+
+### Troubleshooting: Tasks / Analytics return 404
+
+`/tasks` and `/analytics` call `GET /api/tasks` and `GET /api/workspace/stats`. If those return **404**, the API process was likely started **before** the workspace routes were added. Restart the backend with reload:
+
+```bash
+./scripts/dev-backend.sh
+# or: cd backend && source .venv/bin/activate && PYTHONPATH=. uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Confirm routes exist: `curl -s http://localhost:8000/openapi.json | grep -E 'tasks|workspace/stats'`
 
 ## Environment variables
 

@@ -54,4 +54,10 @@ body {
   .ff-input-surface {
     @apply border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)];
   }
+  .ff-muted {
+    @apply text-[var(--ff-text-secondary)];
+  }
+  .ff-disabled-label {
+    @apply text-[var(--ff-text-muted)];
+  }
 }

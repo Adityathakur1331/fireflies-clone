@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
 import { TaskBoard } from "@/components/tasks/TaskBoard";
 import { fetchAllTasks } from "@/lib/api/workspace";
+import { ApiError } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 
 const filters = [
@@ -16,7 +17,7 @@ const filters = [
 export default function TasksPage() {
   const [filter, setFilter] = useState<"all" | "open" | "done">("open");
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["tasks", "all"],
     queryFn: () => fetchAllTasks(true),
   });
@@ -57,7 +58,13 @@ export default function TasksPage() {
 
       {isLoading && <p className="text-sm text-[var(--ff-text-muted)]">Loading tasks…</p>}
       {isError && (
-        <p className="text-sm text-red-400">Could not load tasks. Is the API running?</p>
+        <div className="ff-panel border-red-900/50 bg-red-950/30 p-4 text-sm text-red-300">
+          Could not load tasks from <code className="text-red-200">/api/tasks</code>.
+          <br />
+          {error instanceof ApiError
+            ? `${error.message} (${error.status})`
+            : (error as Error)?.message}
+        </div>
       )}
       {data && <TaskBoard tasks={data} filter={listFilter} />}
     </AppShell>
