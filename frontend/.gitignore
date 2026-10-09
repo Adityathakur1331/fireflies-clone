@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local QA output
+scripts/assignment-browser-qa-results.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

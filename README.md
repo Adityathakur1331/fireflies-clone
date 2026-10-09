@@ -2,6 +2,16 @@
 
 A full-stack meeting-assistant workspace inspired by Fireflies.ai. Browse past meetings, read interactive transcripts synced to sample media, review AI-style summaries, and manage action items. Speech-to-text and real authentication are intentionally mocked.
 
+## Submission links (2026-10-09)
+
+| Item | URL / status |
+|------|----------------|
+| **Source (Cursor Origin)** | https://origin.cursor.com/aditya-thakur/tmp-546d8d7de49f2654 — **private** (verified via `origin repo view`; not a public GitHub repo yet) |
+| **Public GitHub** | **Not published** — create a public repo under your GitHub account and push `main` (see [Preparing GitHub for submission](#preparing-github-for-submission)) |
+| **Live demo** | https://polymer-decreased-fax-mystery.trycloudflare.com — **verified 2026-10-09** (`/meetings`, `/meetings/1`, `/api/meetings` → 6 seeded meetings). Temporary Cloudflare quick tunnel; use [Render](#deployment) for a persistent host. |
+
+**Persistence on demo:** SQLite runs inside the demo process; data resets if the host restarts or redeploys. Seeding runs on container/process start (`alembic upgrade head` + `python -m app.seed`).
+
 ## Tech stack
 
 | Layer | Technology |
@@ -213,18 +223,27 @@ Requirement traceability: [`CHECKLIST.md`](CHECKLIST.md). Audit notes: [`docs/SU
 
 ## Deployment
 
-### Backend (example: Render / Railway)
+### Recommended: single Docker service (Render)
 
-1. Set root to `backend`, start command:  
-   `alembic upgrade head && PYTHONPATH=. python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-2. Env: `DATABASE_URL` (persistent disk path if available), `CORS_ORIGINS=https://your-frontend.vercel.app`
-3. Note: ephemeral disks lose SQLite on redeploy unless you use a volume or re-seed on boot.
+This repo includes a root `Dockerfile` and `render.yaml`. One web service runs FastAPI (internal port 8000) and Next.js (public `PORT`, default 3000) with same-origin `/api` rewrites.
 
-### Frontend (example: Vercel)
+1. Push the project to a **public GitHub** repository.
+2. In [Render](https://render.com), **New → Blueprint** and connect the repo (uses `render.yaml`).
+3. Set `CORS_ORIGINS` to your Render URL if you call the API directly; same-origin browser traffic does not require it.
+4. **SQLite:** free-tier disks are ephemeral — each deploy runs migrate + seed (see `scripts/docker-start.sh`).
 
-1. Root directory: `frontend`
-2. Env: `NEXT_PUBLIC_API_URL=https://your-api.onrender.com`
-3. Build command: `npm run build` — output: Next.js default
+Local production smoke:
+
+```bash
+./scripts/docker-start.sh
+```
+
+### Alternative: split backend + frontend
+
+**Backend (Render / Railway)** — root `backend`, start:  
+`alembic upgrade head && PYTHONPATH=. python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+**Frontend (Vercel)** — root `frontend`, env `NEXT_PUBLIC_API_URL=https://your-api.onrender.com`, and add that origin to backend `CORS_ORIGINS`.
 
 ### Local production smoke
 
@@ -242,6 +261,4 @@ cd frontend && npm run build && npm run start -- -p 3000
 
 ## Screenshots / demo
 
-Add screenshots to `docs/screenshots/` after running locally. Set your hosted demo URL in README:
-
-`Live demo: https://...`
+Optional screenshots: `docs/screenshots/`. Update the **Submission links** table at the top when you replace the temporary demo with Render or Vercel URLs.

@@ -1,0 +1,15 @@
+# Render Blueprint: one web service (Next.js + FastAPI + SQLite).
+# Connect your GitHub repo, set root to repository root, Render detects this file.
+# SQLite is ephemeral on free tier — container start runs migrate + seed.
+services:
+  - type: web
+    name: fireflies-clone
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "3000"
+      - key: CORS_ORIGINS
+        sync: false

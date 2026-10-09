@@ -20,6 +20,9 @@
 | Interaction | Result |
 |-------------|--------|
 | Meetings filter search by title | Pass |
+| Meetings filter by participant name | Pass |
+| Playback `timeupdate` → active transcript line | Pass |
+| Mobile width `/meetings` bottom nav | Pass |
 | Transcript search + `<mark>` highlights | Pass |
 | Transcript line click → audio `currentTime` seek | Pass |
 | Action item add / edit / complete / delete | Pass |
@@ -78,5 +81,5 @@
 - No assignment PDF in repo for line-by-line sign-off.
 - Hosted demo URL not deployed/confirmed.
 - Real-time playback highlight line not exercised in headless browser (seek on click verified).
-- Participant/date filters: API tested; participant filter not re-run in browser QA script.
+- Date-range filter: API tested (`test_filter_date_range`); not in browser QA script.
 - Meeting **edit** metadata: UI exists; not in browser QA script (PATCH covered by pytest).
