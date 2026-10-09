@@ -7,6 +7,10 @@ import { Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWorkspaceSearch } from "./WorkspaceSearchContext";
 
+function normalizeSearchValue(v: string | null | undefined): string {
+  return v ?? "";
+}
+
 export function WorkspaceSearch({
   className,
   placeholder = "Search by title or keyword",
@@ -24,8 +28,12 @@ export function WorkspaceSearch({
   const [focused, setFocused] = useState(false);
   const workspace = useWorkspaceSearch();
 
-  const query = value ?? workspace.query;
+  const query = normalizeSearchValue(value ?? workspace.query);
   const setQuery = onChange ?? workspace.setQuery;
+
+  const handleChange = (next: string) => {
+    setQuery(normalizeSearchValue(next));
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -65,7 +73,7 @@ export function WorkspaceSearch({
         ref={inputRef}
         type="search"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => handleChange(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setTimeout(() => setFocused(false), 150)}
         onKeyDown={(e) => {

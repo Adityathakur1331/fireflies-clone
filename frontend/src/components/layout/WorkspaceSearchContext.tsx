@@ -5,13 +5,14 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
 type WorkspaceSearchContextValue = {
   query: string;
   setQuery: (q: string) => void;
-  /** Meetings page registers to receive live title search updates */
+  /** Meetings page registers to receive global search submissions (ref only, no provider re-render). */
   registerMeetingsSearch: (handler: ((q: string) => void) | null) => void;
   applyMeetingsSearch: (q: string) => void;
 };
@@ -20,30 +21,34 @@ const WorkspaceSearchContext = createContext<WorkspaceSearchContextValue | null>
   null
 );
 
+function normalizeQuery(q: string | null | undefined): string {
+  return q ?? "";
+}
+
 export function WorkspaceSearchProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [query, setQuery] = useState("");
-  const [meetingsHandler, setMeetingsHandler] = useState<
-    ((q: string) => void) | null
-  >(null);
+  const [query, setQueryState] = useState("");
+  const meetingsHandlerRef = useRef<((q: string) => void) | null>(null);
+
+  const setQuery = useCallback((q: string) => {
+    setQueryState(normalizeQuery(q));
+  }, []);
 
   const registerMeetingsSearch = useCallback(
     (handler: ((q: string) => void) | null) => {
-      setMeetingsHandler(handler);
+      meetingsHandlerRef.current = handler;
     },
     []
   );
 
-  const applyMeetingsSearch = useCallback(
-    (q: string) => {
-      setQuery(q);
-      meetingsHandler?.(q);
-    },
-    [meetingsHandler]
-  );
+  const applyMeetingsSearch = useCallback((q: string) => {
+    const next = normalizeQuery(q);
+    setQueryState(next);
+    meetingsHandlerRef.current?.(next);
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -52,7 +57,7 @@ export function WorkspaceSearchProvider({
       registerMeetingsSearch,
       applyMeetingsSearch,
     }),
-    [query, registerMeetingsSearch, applyMeetingsSearch]
+    [query, setQuery, registerMeetingsSearch, applyMeetingsSearch]
   );
 
   return (

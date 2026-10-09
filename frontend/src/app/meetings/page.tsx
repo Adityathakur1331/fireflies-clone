@@ -42,19 +42,17 @@ function MeetingsWorkspace() {
   const debouncedQ = useDebounce(filters.q);
 
   useEffect(() => {
-    if (urlQ) {
-      setFilters((f) => ({ ...f, q: urlQ }));
-      setWorkspaceQuery(urlQ);
-    }
+    setFilters((f) => (f.q === urlQ ? f : { ...f, q: urlQ }));
+    setWorkspaceQuery(urlQ);
   }, [urlQ, setWorkspaceQuery]);
 
   useEffect(() => {
     registerMeetingsSearch((q) => {
-      setFilters((f) => ({ ...f, q }));
-      setWorkspaceQuery(q);
+      const next = q ?? "";
+      setFilters((f) => (f.q === next ? f : { ...f, q: next }));
     });
     return () => registerMeetingsSearch(null);
-  }, [registerMeetingsSearch, setWorkspaceQuery]);
+  }, [registerMeetingsSearch]);
 
   const queryParams = useMemo(
     () => ({
