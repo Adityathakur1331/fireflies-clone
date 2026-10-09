@@ -1,5 +1,7 @@
 import { AppSidebar } from "./AppSidebar";
+import { SidebarCollapseProvider } from "./SidebarCollapseContext";
 import { TopNav } from "./TopNav";
+import { WorkspaceSearchProvider } from "./WorkspaceSearchContext";
 
 export function AppShell({
   children,
@@ -20,10 +22,17 @@ export function AppShell({
   searchPlaceholder?: string;
 }) {
   return (
-    <div className="flex min-h-screen bg-[var(--ff-bg)]">
-      <AppSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopNav title={title} subtitle={subtitle} actions={actions} searchPlaceholder={searchPlaceholder} />
+    <SidebarCollapseProvider>
+      <WorkspaceSearchProvider>
+        <div className="flex min-h-screen bg-[var(--ff-bg)]">
+          <AppSidebar />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <TopNav
+              title={title}
+              subtitle={subtitle}
+              actions={actions}
+              searchPlaceholder={searchPlaceholder}
+            />
         <main
           className={
             flush
@@ -35,7 +44,9 @@ export function AppShell({
         >
           {children}
         </main>
-      </div>
-    </div>
+          </div>
+        </div>
+      </WorkspaceSearchProvider>
+    </SidebarCollapseProvider>
   );
 }

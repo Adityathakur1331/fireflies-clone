@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Hash, LayoutGrid, Mic, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { WorkspaceSearch } from "@/components/layout/WorkspaceSearch";
+import { Search } from "lucide-react";
 
 const links = [
   { id: "mine", label: "My Meetings", icon: LayoutGrid, href: "/meetings?view=mine" },
@@ -23,7 +23,18 @@ export function MeetingsSecondarySidebar() {
       aria-label="Meetings navigation"
     >
       <div className="p-3">
-        <WorkspaceSearch placeholder="Search channels" className="max-w-none" />
+        <div className="relative">
+          <Search
+            className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--ff-text-muted)]"
+            aria-hidden
+          />
+          <input
+            type="search"
+            placeholder="Search channels"
+            className="h-8 w-full rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface)] py-1 pl-8 pr-2 text-xs text-[var(--ff-text)] placeholder:text-[var(--ff-text-muted)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--ff-accent)]"
+            aria-label="Search channels"
+          />
+        </div>
       </div>
       <nav className="flex flex-col gap-0.5 px-2">
         {links.map(({ id, label, icon: Icon, href, soon, badge }) => {

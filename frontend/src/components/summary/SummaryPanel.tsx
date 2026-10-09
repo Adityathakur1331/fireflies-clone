@@ -74,9 +74,9 @@ export function SummaryPanel({
 
   return (
     <div className="h-full space-y-0 overflow-y-auto">
-      <section className="border-b border-[var(--ff-border)] px-4 py-4">
+      <section id="notepad-summary" className="border-b border-[var(--ff-border)] px-4 py-4">
         <div className="mb-2 flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-violet-600" aria-hidden />
+          <Sparkles className="h-4 w-4 text-[var(--ff-accent-muted)]" aria-hidden />
           <h3 className="text-sm font-semibold text-[var(--ff-text)]">AI Summary</h3>
           <span className="rounded bg-[var(--ff-accent)]/20 px-1.5 py-0.5 text-[10px] font-medium text-[var(--ff-accent-muted)]">
             Seeded
@@ -92,13 +92,13 @@ export function SummaryPanel({
         )}
       </section>
 
-      <section className="border-b border-[var(--ff-border)] px-4 py-4">
+      <section id="notepad-topics" className="border-b border-[var(--ff-border)] px-4 py-4">
         <h3 className="ff-section-label mb-2">Key topics</h3>
         <ul className="flex flex-wrap gap-1.5">
           {summary.key_topics.map((t) => (
             <li
               key={t}
-              className="rounded-md border border-violet-100 bg-violet-50/80 px-2.5 py-1 text-xs font-medium text-violet-900"
+              className="rounded-md border border-[var(--ff-accent)]/25 bg-[var(--ff-accent)]/10 px-2.5 py-1 text-xs font-medium text-[var(--ff-accent-muted)]"
             >
               {t}
             </li>
@@ -106,35 +106,7 @@ export function SummaryPanel({
         </ul>
       </section>
 
-      <section className="border-b border-[var(--ff-border)] px-4 py-4">
-        <h3 className="ff-section-label mb-2">Meeting notes</h3>
-        <p className="text-sm leading-relaxed text-[var(--ff-text-secondary)]">
-          Structured notes are derived from the seeded summary above. Connect a live notetaker
-          for real-time capture (coming soon).
-        </p>
-      </section>
-
-      <section className="border-b border-[var(--ff-border)] px-4 py-4">
-        <h3 className="ff-section-label mb-2">Chapters</h3>
-        <ul className="space-y-1">
-          {summary.chapters.map((ch) => (
-            <li key={ch.id}>
-              <button
-                type="button"
-                className="flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm text-[var(--ff-text)] hover:bg-[var(--ff-sidebar-hover)]"
-                onClick={() => onChapterClick?.(ch.start_ms)}
-              >
-                <span className="pr-2">{ch.title}</span>
-                <span className="shrink-0 font-mono text-[11px] text-violet-700">
-                  {formatTimestamp(ch.start_ms)}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="px-4 py-4">
+      <section id="notepad-actions" className="border-b border-[var(--ff-border)] px-4 py-4">
         <h3 className="ff-section-label mb-3">Action items</h3>
         {actionItems.length === 0 && (
           <p className="mb-3 text-sm text-[var(--ff-text-muted)]">No action items yet. Add one below.</p>
@@ -143,7 +115,7 @@ export function SummaryPanel({
           {actionItems.map((item) => (
             <li
               key={item.id}
-              className="flex items-start gap-2 rounded-md border border-[var(--ff-border)] bg-white px-3 py-2"
+              className="flex items-start gap-2 rounded-md border border-[var(--ff-border)] bg-[var(--ff-surface-elevated)] px-3 py-2"
             >
               <Checkbox.Root
                 checked={item.is_completed}
@@ -211,7 +183,7 @@ export function SummaryPanel({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 px-2 text-xs text-red-600 hover:bg-red-50"
+                    className="h-7 px-2 text-xs text-red-400 hover:bg-red-950/40"
                     onClick={() => deleteMutation.mutate(item.id)}
                   >
                     Delete
@@ -236,6 +208,26 @@ export function SummaryPanel({
             Add
           </Button>
         </div>
+      </section>
+
+      <section id="notepad-chapters" className="px-4 py-4">
+        <h3 className="ff-section-label mb-2">Chapters</h3>
+        <ul className="space-y-1">
+          {summary.chapters.map((ch) => (
+            <li key={ch.id}>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm text-[var(--ff-text)] hover:bg-[var(--ff-sidebar-hover)]"
+                onClick={() => onChapterClick?.(ch.start_ms)}
+              >
+                <span className="pr-2">{ch.title}</span>
+                <span className="shrink-0 font-mono text-[11px] text-[var(--ff-accent-muted)]">
+                  {formatTimestamp(ch.start_ms)}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );

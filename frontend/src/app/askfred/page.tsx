@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Send, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
@@ -10,9 +11,15 @@ import { fetchMeetings } from "@/lib/api/meetings";
 import { fetchAllTasks, fetchWorkspaceStats } from "@/lib/api/workspace";
 import { Button } from "@/components/ui/button";
 
-export default function AskFredPage() {
-  const [query, setQuery] = useState("");
+function AskFredPageContent() {
+  const searchParams = useSearchParams();
+  const initialQ = searchParams.get("q") ?? "";
+  const [query, setQuery] = useState(initialQ);
   const [answer, setAnswer] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialQ) setQuery(initialQ);
+  }, [initialQ]);
 
   const meetingsQuery = useQuery({
     queryKey: ["meetings", { askfred: true }],

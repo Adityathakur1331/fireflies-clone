@@ -7,7 +7,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
 import { bottomNav, mobileNav, primaryNav, productNav } from "./nav-config";
 import { WorkspaceSearch } from "./WorkspaceSearch";
-import { CreateMeetingDialog } from "@/components/meetings/CreateMeetingDialog";
+import { CaptureMenu } from "./CaptureMenu";
 
 export function TopNav({
   title,
@@ -79,9 +79,7 @@ export function TopNav({
             <Bell className="h-4 w-4" />
             <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-red-500" />
           </button>
-          <CreateMeetingDialog
-            triggerVariant="capture"
-          />
+          <CaptureMenu />
           <DropdownMenu.Root>
             <DropdownMenu.Trigger
               className="flex items-center gap-1 rounded-md px-1 py-1 hover:bg-[var(--ff-sidebar-hover)]"

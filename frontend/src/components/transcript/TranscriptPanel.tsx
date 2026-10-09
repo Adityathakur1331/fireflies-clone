@@ -91,6 +91,7 @@ export function TranscriptPanel({
               aria-hidden
             />
             <Input
+              id="transcript-search-input"
               className="h-8 pl-8 pr-8 text-sm"
               placeholder="Search transcript..."
               value={searchQuery}

@@ -23,10 +23,16 @@ import { Label } from "@/components/ui/label";
 
 export function CreateMeetingDialog({
   triggerVariant = "default",
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: {
   triggerVariant?: "default" | "capture";
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = controlledOnOpenChange ?? setUncontrolledOpen;
   const [title, setTitle] = useState("");
   const [participants, setParticipants] = useState("");
   const [transcriptRaw, setTranscriptRaw] = useState("");
@@ -102,6 +108,8 @@ export function CreateMeetingDialog({
       </Button>
     );
 
+  const isControlled = controlledOpen !== undefined;
+
   return (
     <Dialog
       open={open}
@@ -110,7 +118,7 @@ export function CreateMeetingDialog({
         if (!v) resetForm();
       }}
     >
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {!isControlled && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Create meeting</DialogTitle>
